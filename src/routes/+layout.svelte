@@ -136,7 +136,7 @@
 		{#if $drawerStore.meta.reminders}
 			{#if $drawerStore.meta.reminders.latest.length > 0}
 				<div>
-					<h3 class="h3 font-bold">Letze Prüfungsergebnisse</h3>
+					<h3 class="h3 font-bold">Letzte Prüfungsergebnisse</h3>
 
 					<ul class="list-disc list-inside text-lg">
 						{#each $drawerStore.meta.reminders.latest as item}
