@@ -4,107 +4,106 @@
 
 	import type { ActionData } from './$types';
 
-	export let form: ActionData;
+	// Svelte 5 (runes): `form` is derived from the server response, but can be temporarily overridden
+	let { form: serverForm = null } = $props<{ form?: ActionData | null }>();
 
-	let login_in_progress = false;
+	let form = $derived(serverForm);
+	let loginInProgress = $state(false);
 </script>
 
-<div class="flex h-full items-center justify-center">
-	<div class="w-full max-w-sm">
-		<form
-			use:enhance={() => {
-				// clear the previous response if any (to remove bad credentials msg)
-				form = null;
-				login_in_progress = true;
-
-				return async ({ update }) => {
-					await update();
-					login_in_progress = false;
-				};
-			}}
-			action="?/login"
-			method="POST"
-			class="bg-surface-100-800-token rounded-token space-y-4 p-6 pb-4 shadow-md dark:bg-gray-800"
-		>
-			<div>
-				<label class="text-token mb-2 block text-sm font-bold" for="username">
-					CampusDual-Benutzername
-				</label>
-				<input
-					class="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-					name="username"
-					id="username"
-					type="text"
-					autocomplete="username"
-					required
-					placeholder="500xxxx"
-				/>
+<div class="flex h-full w-full items-center justify-center p-4">
+	<div class="card w-full max-w-md bg-base-200 shadow-xl">
+		<div class="card-body gap-4">
+			<div class="space-y-1 text-center">
+				<h1 class="text-2xl font-semibold">Anmelden</h1>
 			</div>
-			<div>
-				<label class="text-token mb-2 block text-sm font-bold" for="password"
-					>CampusDual-Passwort</label
-				>
-				<input
-					class="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-600 shadow focus:outline-none"
-					name="password"
-					id="password"
-					type="password"
-					autocomplete="current-password"
-					required
-					placeholder="das normale, nicht den Hash"
-				/>
-				<div class="-mb-3 h-6">
-					{#if form?.message}
-						<small class="text-red-500">{form.message}</small>
-					{/if}
+
+			{#if form?.message}
+				<div role="alert" class="alert alert-error">
+					<span>{form.message}</span>
 				</div>
-			</div>
+			{/if}
 
-			<div
-				class="bg-surface-200-700-token border-token border-surface-500-400-token space-y-2 rounded-md p-2"
+			<form
+				action="?/login"
+				method="POST"
+				class="space-y-3"
+				use:enhance={() => {
+					// Clear the previous response (e.g. bad credentials) and show a loading state.
+					form = null;
+					loginInProgress = true;
+
+					return async ({ update }) => {
+						await update();
+						loginInProgress = false;
+					};
+				}}
 			>
-				<label class="flex items-center space-x-2">
+				<div class="form-control">
+					<label class="label" for="username">
+						<span class="label-text">CampusDual-Benutzername</span>
+					</label>
 					<input
-						type="checkbox"
-						class="variant-outline-surface checkbox outline-2"
-						name="dataConsent"
+						id="username"
+						name="username"
+						type="text"
+						autocomplete="username"
 						required
+						placeholder="500xxxx"
+						class="input-bordered input w-full"
 					/>
-					<p class="text-sm font-bold">
-						Ich stimme zu, dass
-						<span
-							class="bg-linear-to-br from-blue-700 to-pink-600 box-decoration-clone bg-clip-text text-transparent"
-							>CampusUnbloat</span
-						>
-						sich in meinem Namen bei CampusDual einloggt.
-						<br />
-						Daten werden nur lokal gespeichert.
-					</p>
-				</label>
-
-				<div class="flex justify-center space-x-2">
-					<a
-						href={resolve('/impressum')}
-						type="button"
-						class="variant-filled btn h-7 text-sm transition-transform">Impressum</a
-					>
-					<a
-						href={resolve('/datenschutz')}
-						type="button"
-						class="variant-filled btn h-7 text-sm transition-transform">Datenschutzerklärung</a
-					>
 				</div>
-			</div>
 
-			<div class="mt-4 flex justify-center">
-				<button
-					class="{login_in_progress
-						? 'variant-ghost-primary pointer-events-none'
-						: 'variant-filled-primary'} btn w-32"
-				>
-					Anmelden
-				</button>
-			</div>
-		</form>
+				<div class="form-control">
+					<label class="label" for="password">
+						<span class="label-text">CampusDual-Passwort</span>
+					</label>
+					<input
+						id="password"
+						name="password"
+						type="password"
+						autocomplete="current-password"
+						required
+						class="input-bordered input w-full"
+					/>
+				</div>
+
+				<div class="rounded-box bg-base-200 p-3">
+					<label class="label cursor-pointer items-start justify-start gap-3">
+						<input
+							type="checkbox"
+							name="dataConsent"
+							required
+							class="checkbox mt-1 checkbox-primary"
+						/>
+						<span class="label-text">
+							Ich stimme zu, dass sich <span
+								class="bg-linear-to-br from-blue-700 to-pink-600 box-decoration-clone bg-clip-text text-transparent"
+								>CampusUnbloat</span
+							>
+							in meinem Namen bei CampusDual einloggt.
+							<span class="block text-xs opacity-70">Daten werden nur lokal gespeichert.</span>
+						</span>
+					</label>
+
+					<div class="mt-2 flex justify-between text-sm">
+						<a class="link link-hover" href={resolve('/impressum')}>Impressum</a>
+						<a class="link link-hover" href={resolve('/datenschutz')}>Datenschutz</a>
+					</div>
+				</div>
+
+				<div class="pt-2">
+					<button
+						type="submit"
+						class="btn w-full btn-primary"
+						class:loading={loginInProgress}
+						disabled={loginInProgress}
+						aria-busy={loginInProgress}
+					>
+						Anmelden
+					</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>

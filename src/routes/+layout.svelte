@@ -11,8 +11,10 @@
 </svelte:head>
 
 <div class="flex min-h-dvh flex-col">
-	<CampusTitleBar />
-	<main class="flex-1 space-y-6 p-4 pt-6">
-		{@render children()}
-	</main>
+	<div class="flex min-h-dvh flex-col">
+		<CampusTitleBar />
+		<main class="flex flex-1 flex-col justify-center">
+			{@render children?.()}
+		</main>
+	</div>
 </div>
