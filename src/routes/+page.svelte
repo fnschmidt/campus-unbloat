@@ -68,17 +68,18 @@
 					/>
 				</div>
 
-				<div class="rounded-box bg-base-200 p-3">
-					<label class="label cursor-pointer items-start justify-start gap-3">
+				<div class=" space-y-2 rounded-2xl bg-base-100 p-3 shadow-lg">
+					<label class="label w-full cursor-pointer items-start justify-start gap-3">
 						<input
 							type="checkbox"
 							name="dataConsent"
 							required
-							class="checkbox mt-1 checkbox-primary"
+							class="checkbox mt-1 shrink-0 checkbox-primary"
 						/>
-						<span class="label-text">
-							Ich stimme zu, dass sich <span
-								class="bg-linear-to-br from-blue-700 to-pink-600 box-decoration-clone bg-clip-text text-transparent"
+						<span class="label-text flex-1 leading-snug whitespace-normal">
+							Ich stimme zu, dass sich
+							<span
+								class="bg-linear-to-br from-primary to-accent box-decoration-clone bg-clip-text text-transparent"
 								>CampusUnbloat</span
 							>
 							in meinem Namen bei CampusDual einloggt.
@@ -86,9 +87,10 @@
 						</span>
 					</label>
 
-					<div class="mt-2 flex justify-between text-sm">
-						<a class="link link-hover" href={resolve('/impressum')}>Impressum</a>
-						<a class="link link-hover" href={resolve('/datenschutz')}>Datenschutz</a>
+					<div class="mt-2 flex justify-end space-x-2">
+						<a class="btn btn-soft btn-sm btn-primary" href={resolve('/impressum')}>Impressum</a>
+						<a class="btn btn-soft btn-sm btn-primary" href={resolve('/datenschutz')}>Datenschutz</a
+						>
 					</div>
 				</div>
 
@@ -96,7 +98,6 @@
 					<button
 						type="submit"
 						class="btn w-full btn-primary"
-						class:loading={loginInProgress}
 						disabled={loginInProgress}
 						aria-busy={loginInProgress}
 					>
