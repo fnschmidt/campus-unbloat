@@ -1,2 +1,17 @@
 @import 'tailwindcss';
 @plugin 'daisyui';
+
+@layer components {
+	.h1 {
+		@apply text-4xl font-bold;
+	}
+	.h2 {
+		@apply mt-8 text-2xl font-semibold;
+	}
+	.h3 {
+		@apply mt-6 text-xl font-semibold;
+	}
+	.h4 {
+		@apply mt-4 text-lg font-semibold;
+	}
+}

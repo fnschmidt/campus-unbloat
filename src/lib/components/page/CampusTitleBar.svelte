@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Bug, Github, GithubIcon, LogOut } from '@lucide/svelte';
+	import { Bug, Github, LogOut } from '@lucide/svelte';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 
 	// import Logo from '$lib/assets/logo-kiel-sailing-city.svelte';
 </script>
@@ -19,13 +21,21 @@
 			<div tabindex="0" role="button" class="btn my-1 btn-circle btn-soft btn-sm btn-primary">
 				<p class="font-mono text-[14px]">i</p>
 			</div>
-			<div tabindex="-1" class="dropdown-content card z-1 w-48 glass shadow-md card-sm">
-				<div class="card-body">
-					<a href={resolve('/')} class="btn rounded-full btn-outline btn-primary"
-						><Github size={18} />Quellcode</a
+			<div
+				tabindex="-1"
+				class="dropdown-content card z-1 w-48 rounded-3xl bg-primary/20 shadow-md backdrop-blur-2xl card-sm"
+			>
+				<div class="card-body p-3">
+					<a
+						href="https://github.com/fnschmidt/campus-unbloat"
+						target="_blank"
+						aria-label="Quellcode (GitHub)"
+						class="btn rounded-full btn-outline btn-primary"><Github size={18} />Quellcode</a
 					>
-					<a href={resolve('/')} class="btn rounded-full btn-outline btn-primary"
-						><Bug size={18} /> Fehler melden</a
+					<a
+						href="https://github.com/fnschmidt/campus-unbloat/issues/new?assignees=fnschmidt&labels=triage&title=[Feature]:%20/[Bug]:%20...&body=Describe%20a%20bug%20you%20encountered,%20or%20a%20feature%20that%20you%20think%20is%20missing."
+						target="_blank"
+						class="btn rounded-full btn-outline btn-primary"><Bug size={18} /> Fehler melden</a
 					>
 				</div>
 			</div>
@@ -35,16 +45,61 @@
 			<div tabindex="0" role="button" class="btn my-1 rounded-full btn-soft btn-sm btn-primary">
 				Rechtliches
 			</div>
-			<div tabindex="-1" class="dropdown-content card z-1 w-44 bg-base-100 shadow-md card-sm">
-				<div class="card-body">
-					<a href={resolve('/')} class="btn rounded-full btn-outline btn-primary">Impressum</a>
-					<a href={resolve('/')} class="btn rounded-full btn-outline btn-primary">Datenschutz</a>
+			<div
+				tabindex="-1"
+				class="dropdown-content card z-1 w-44 rounded-3xl bg-primary/20 shadow-md backdrop-blur-2xl card-sm"
+			>
+				<div class="card-body p-3">
+					<a href={resolve('/impressum')} class="btn rounded-full btn-outline btn-primary"
+						>Impressum</a
+					>
+					<a href={resolve('/datenschutz')} class="btn rounded-full btn-outline btn-primary"
+						>Datenschutz</a
+					>
 				</div>
 			</div>
 		</div>
 
-		<button class="btn my-1 rounded-full btn-soft btn-sm btn-error"
-			><LogOut size={16} strokeWidth={3} /></button
-		>
+		{#if page.route.id == '/impressum' || page.route.id == '/datenschutz'}
+			<button
+				class="btn my-1 rounded-full btn-soft btn-sm btn-error"
+				onclick={async () => {
+					const response = await fetch('/');
+
+					if (response.redirected) {
+						if (response.url.endsWith('/dashboard')) {
+							goto(resolve('/dashboard'));
+						} else {
+							// should never happen
+							window.location.href = response.url;
+						}
+					} else {
+						goto(resolve('/'));
+					}
+				}}
+			>
+				Zurück
+			</button>
+		{/if}
+		{#if page.route.id == '/dashboard'}
+			<button
+				class="btn my-1 rounded-full btn-soft btn-sm btn-error"
+				aria-label="Abmelden"
+				onclick={async () => {
+					await fetch('/logout', {
+						method: 'POST'
+					});
+					goto(resolve('/'));
+				}}><LogOut size={16} strokeWidth={3} /></button
+			>
+		{/if}
+		{#if page.route.id == '/'}
+			<a
+				href="https://github.com/fnschmidt/campus-unbloat"
+				target="_blank"
+				aria-label="Quellcode (GitHub)"
+				class="btn my-1 rounded-full btn-soft btn-sm"><Github size={18} />Quellcode</a
+			>
+		{/if}
 	</div>
 </nav>
