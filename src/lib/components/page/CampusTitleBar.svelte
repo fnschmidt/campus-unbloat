@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { LogOut } from '@lucide/svelte';
+	import { Bug, Github, GithubIcon, LogOut } from '@lucide/svelte';
 
 	// import Logo from '$lib/assets/logo-kiel-sailing-city.svelte';
 </script>
@@ -16,27 +16,35 @@
 	<p class="text-xl font-bold">CampusUnbloat</p>
 	<div class="flex flex-row space-x-1">
 		<div class="dropdown dropdown-center">
-			<div tabindex="0" role="button" class="btn my-1 btn-circle btn-sm">
+			<div tabindex="0" role="button" class="btn my-1 btn-circle btn-soft btn-sm btn-primary">
 				<p class="font-mono text-[14px]">i</p>
 			</div>
-			<div tabindex="-1" class="dropdown-content card z-1 w-64 bg-base-100 shadow-md card-sm">
+			<div tabindex="-1" class="dropdown-content card z-1 w-48 glass shadow-md card-sm">
 				<div class="card-body">
-					<a href={resolve('/')} class="btn">Impressum</a>
-					<a href={resolve('/')} class="btn">Datenschutz</a>
+					<a href={resolve('/')} class="btn rounded-full btn-outline btn-primary"
+						><Github size={18} />Quellcode</a
+					>
+					<a href={resolve('/')} class="btn rounded-full btn-outline btn-primary"
+						><Bug size={18} /> Fehler melden</a
+					>
 				</div>
 			</div>
 		</div>
 
 		<div class="dropdown dropdown-center">
-			<div tabindex="0" role="button" class="btn my-1 rounded-full btn-sm">Rechtliches</div>
-			<div tabindex="-1" class="dropdown-content card z-1 w-64 bg-base-100 shadow-md card-sm">
+			<div tabindex="0" role="button" class="btn my-1 rounded-full btn-soft btn-sm btn-primary">
+				Rechtliches
+			</div>
+			<div tabindex="-1" class="dropdown-content card z-1 w-44 bg-base-100 shadow-md card-sm">
 				<div class="card-body">
-					<a href={resolve('/')} class="btn">Impressum</a>
-					<a href={resolve('/')} class="btn">Datenschutz</a>
+					<a href={resolve('/')} class="btn rounded-full btn-outline btn-primary">Impressum</a>
+					<a href={resolve('/')} class="btn rounded-full btn-outline btn-primary">Datenschutz</a>
 				</div>
 			</div>
 		</div>
 
-		<button class="btn my-1 rounded-full btn-sm"><LogOut size={16} strokeWidth={3} /></button>
+		<button class="btn my-1 rounded-full btn-soft btn-sm btn-error"
+			><LogOut size={16} strokeWidth={3} /></button
+		>
 	</div>
 </nav>
