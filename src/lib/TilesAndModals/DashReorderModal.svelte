@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Move, X } from '@lucide/svelte';
+	import { Menu, Move, X } from '@lucide/svelte';
 	import type { Writable } from 'svelte/store';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
@@ -11,7 +11,6 @@
 	let { componentOrder }: { componentOrder: Writable<string[]> } = $props();
 
 	let items = $derived($componentOrder?.map((id) => ({ id, title: tileNames.get(id) })));
-	// let items = $componentOrder.map((id) => ({ id, title: tileNames.get(id) }));
 
 	function handleSort(e: CustomEvent) {
 		items = e.detail.items;
@@ -38,7 +37,7 @@
 
 {#if items}
 	<!--Dialog Element um Modal zu definieren-->
-	<dialog id="webIdModal" class="modal" bind:this={modal}>
+	<dialog class="modal" bind:this={modal}>
 		<div class="modal-box">
 			<!--Knopf zum schließen des Modals-->
 			<form method="dialog">
@@ -57,7 +56,7 @@
 						class="rounded-token flex items-center bg-[#ddb8c1] px-4 py-2 dark:bg-[#3b1725]"
 					>
 						<p class="grow">{item.title}</p>
-						<i class="fa-solid fa-bars"></i>
+						<Menu size={18} />
 					</div>
 				{/each}
 			</div>

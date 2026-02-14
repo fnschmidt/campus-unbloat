@@ -3,8 +3,6 @@
 	import { Bug, Github, LogOut } from '@lucide/svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-
-	// import Logo from '$lib/assets/logo-kiel-sailing-city.svelte';
 </script>
 
 <!-- Obere Navigationsleiste; Padding oben respektiert Safe-Area-Inset für nicht-eckige Bildschirme -->

@@ -33,6 +33,7 @@
 	import { every as _every, some as _some, isEqual as _isEqual } from 'lodash-es';
 	import { Bell } from '@lucide/svelte';
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
+	import NotificationDrawer from '$lib/components/page/NotificationDrawer.svelte';
 
 	export let data;
 
@@ -123,14 +124,11 @@
 	}
 
 	function openRemindersDrawer() {
+		const toggle: HTMLElement | null = document.getElementById('notifications-drawer');
+		if (toggle && toggle instanceof HTMLInputElement) toggle.checked = true;
+
 		readRemindersStore.set(reminders!);
 		presentReminderCategories = getUnreadReminderCategories(reminders!);
-		window.alert('drawer');
-		// const drawerSettings: DrawerSettings = {
-		// 	id: 'example-1',
-		// 	meta: { reminders: reminders }
-		// };
-		// drawerStore.open(drawerSettings);
 	}
 
 	function getUnreadReminderCategories(reminders: CdReminders): number {
@@ -166,19 +164,16 @@
 	function allItemsPresentInSecondDeep(list1: object[], list2: object[]): boolean {
 		return _every(list1, (item) => _some(list2, (item2) => _isEqual(item, item2)));
 	}
-
-	// function openTileReorder() {
-	// 	window.alert('tiles reord');
-	// 	// modalStore.trigger(modal);
-	// }
 </script>
+
+<NotificationDrawer {reminders} />
 
 <PageContainer>
 	{#if basicUserData}
 		<div class="mx-auto flex w-[98%] items-center space-x-1 sm:w-96 lg:w-[48.6rem]">
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<h1 class="grow text-3xl font-bold" on:click={() => {}}>
+			<h1 class="grow text-3xl font-bold" onclick={() => {}}>
 				Hallo, {basicUserData.first_name}.
 			</h1>
 
@@ -193,12 +188,18 @@
 			<DashReorderModal {componentOrder} />
 
 			<div class="indicator">
-				<span class="indicator-item badge size-6 rounded-full badge-primary"
-					>{presentReminderCategories}</span
+				<span
+					class="indicator-item badge size-6 rounded-full badge-primary {presentReminderCategories
+						? ''
+						: 'hidden'}">{presentReminderCategories}</span
 				>
+
 				<button
+					onclick={() => openRemindersDrawer()}
+					aria-controls="notifications-drawer"
+					disabled={!reminders}
 					aria-label="Benachrichtigungen"
-					class="btn btn-circle {reminders ? 'btn-error' : 'pointer-events-none btn-soft'}"
+					class="drawer-button btn btn-circle {reminders ? 'btn-error' : 'btn-soft'}"
 				>
 					{#if reminders}
 						<Bell size={18} />
@@ -207,26 +208,6 @@
 					{/if}
 				</button>
 			</div>
-
-			<!-- <div class="relative inline-block">
-				{#if presentReminderCategories != 0}
-					<span
-						class="badge-icon variant-filled-secondary pointer-events-none absolute -top-1 -right-1 z-10 size-6"
-						>{presentReminderCategories}</span
-					>
-				{/if}
-				<button
-					aria-label="Benachrichtigungen"
-					on:click={openRemindersDrawer}
-					class="btn btn-circle {reminders ? 'btn-error' : 'pointer-events-none btn-soft'}"
-				>
-					{#if reminders}
-						<Bell size={18} />
-					{:else}
-						<span class="loading loading-md loading-spinner"></span>
-					{/if}
-				</button>
-			</div> -->
 		</div>
 	{/if}
 	{#if $componentOrder && componentProps}
