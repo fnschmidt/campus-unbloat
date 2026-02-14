@@ -1,6 +1,12 @@
 @import 'tailwindcss';
 @plugin 'daisyui';
 
+@theme {
+	--breakpoint-sm: 480px;
+	--breakpoint-md: 640px;
+	--breakpoint-lg: 812px;
+}
+
 @layer components {
 	.h1 {
 		@apply text-4xl font-bold;

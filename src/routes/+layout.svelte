@@ -21,7 +21,7 @@
 		</div>
 	</div>
 {:else}
-	<div class="flex min-h-dvh flex-col">
+	<div class="flex min-h-dvh flex-col bg-base-300">
 		<CampusTitleBar />
 		<main class="flex-1 space-y-6 p-4 pt-6">
 			{@render children()}
