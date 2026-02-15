@@ -26,7 +26,7 @@
 	import BasicInfoTile from '$lib/TilesAndModals/BasicInfoTile.svelte';
 	// import CalendarTile from '$lib/TilesAndModals/CalendarTile.svelte';
 	// import ExamSignupTile from '$lib/TilesAndModals/ExamSignupTile.svelte';
-	// import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
+	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	// import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
 	// import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
@@ -43,7 +43,7 @@
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const componentMap: Record<string, Component<any, any, any>> = {
 		BasicInfoTile,
-		// GradesTile,
+		GradesTile,
 		// CalendarTile,
 		// MensaTile,
 		// ExamSignupTile,

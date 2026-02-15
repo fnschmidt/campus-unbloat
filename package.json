@@ -38,6 +38,8 @@
 	},
 	"dependencies": {
 		"@lucide/svelte": "^0.564.0",
+		"@types/chart.js": "^2.9.41",
+		"chart.js": "^4.5.1",
 		"daisyui": "^5.5.18",
 		"lodash-es": "^4.17.23",
 		"svelte-dnd-action": "^0.9.69",

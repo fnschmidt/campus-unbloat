@@ -3,6 +3,7 @@
 	// import { ProgressRadial } from '@skeletonlabs/skeleton';
 
 	import TileInteractiveElementWrapper from './TilesAndModals/TileInteractiveElementWrapper.svelte';
+	import { Maximize2 } from '@lucide/svelte';
 
 	export let title: string;
 	export let clickable: boolean = true;
@@ -61,6 +62,7 @@
 >
 	<div class="flex w-full flex-row items-center justify-between">
 		{#if clickable}
+			<Maximize2 size={20} strokeWidth={3} />
 			<i class="{ready ? '' : 'opacity-40'} fa-solid fa-up-right-and-down-left-from-center w-4"></i>
 		{/if}
 		<header class="w-full grow text-center text-xl font-bold">{title}</header>

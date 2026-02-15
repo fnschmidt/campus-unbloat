@@ -3,8 +3,9 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import CampusTitleBar from '$lib/components/page/CampusTitleBar.svelte';
 	import { page } from '$app/state';
+	import type { Snippet } from 'svelte';
 
-	let { children } = $props();
+	let { children }: { children: Snippet } = $props();
 </script>
 
 <svelte:head>
