@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { Menu, Move, X } from '@lucide/svelte';
 	import type { Writable } from 'svelte/store';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 
 	import { tileNames, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder';
+	import { faBars, faUpDownLeftRight, faXmark } from '@fortawesome/free-solid-svg-icons';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 
 	let modal: HTMLDialogElement | null = $state(null);
 
@@ -32,7 +33,7 @@
 	aria-label="Anordnung ändern"
 	onclick={() => modal?.showModal()}
 	class="btn btn-circle btn-primary"
-	><Move size={18} />
+	><FontAwesomeIcon icon={faUpDownLeftRight}/>
 </button>
 
 {#if items}
@@ -41,7 +42,7 @@
 		<div class="modal-box">
 			<!--Knopf zum schließen des Modals-->
 			<form method="dialog">
-				<button class="absolute top-3 right-3 btn-circle btn-xs btn-accent"><X /></button>
+						<button class="btn btn-circle"><FontAwesomeIcon icon={faXmark} /></button>
 			</form>
 
 			<div
@@ -56,7 +57,7 @@
 						class="rounded-token flex items-center bg-[#ddb8c1] px-4 py-2 dark:bg-[#3b1725]"
 					>
 						<p class="grow">{item.title}</p>
-						<Menu size={18} />
+						<FontAwesomeIcon icon={faBars}/>
 					</div>
 				{/each}
 			</div>

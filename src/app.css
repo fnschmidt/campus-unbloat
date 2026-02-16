@@ -21,3 +21,10 @@
 		@apply mt-4 text-lg font-semibold;
 	}
 }
+
+:root {
+	--color-primary: #4685af;
+	--color-primary-content: #ffffff;
+	--color-accent: #d4163c;
+	--color-accent-content: #ffffff;
+}

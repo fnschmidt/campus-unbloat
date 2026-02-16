@@ -24,16 +24,17 @@
 
 	import PageContainer from '$lib/PageContainer.svelte';
 	import BasicInfoTile from '$lib/TilesAndModals/BasicInfoTile.svelte';
-	// import CalendarTile from '$lib/TilesAndModals/CalendarTile.svelte';
+	import CalendarTile from '$lib/TilesAndModals/CalendarTile.svelte';
 	// import ExamSignupTile from '$lib/TilesAndModals/ExamSignupTile.svelte';
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	// import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
 	// import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 	import { every as _every, some as _some, isEqual as _isEqual } from 'lodash-es';
-	import { Bell } from '@lucide/svelte';
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 	import NotificationDrawer from '$lib/components/page/NotificationDrawer.svelte';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faBell } from '@fortawesome/free-solid-svg-icons';
 
 	export let data;
 
@@ -44,7 +45,7 @@
 	const componentMap: Record<string, Component<any, any, any>> = {
 		BasicInfoTile,
 		GradesTile,
-		// CalendarTile,
+		CalendarTile,
 		// MensaTile,
 		// ExamSignupTile,
 		BlockplanTile
@@ -199,10 +200,10 @@
 					aria-controls="notifications-drawer"
 					disabled={!reminders}
 					aria-label="Benachrichtigungen"
-					class="drawer-button btn btn-circle {reminders ? 'btn-error' : 'btn-soft'}"
+					class="drawer-button btn btn-circle {reminders ? 'btn-accent' : 'btn-soft'}"
 				>
 					{#if reminders}
-						<Bell size={18} />
+						<FontAwesomeIcon icon={faBell}/>
 					{:else}
 						<span class="loading loading-md loading-spinner"></span>
 					{/if}

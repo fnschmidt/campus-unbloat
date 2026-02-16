@@ -110,7 +110,7 @@
 							label="5.0 Abfahrt"
 							value={stats.unsuccessful}
 							{total}
-							color="var(--color-secondary)"
+							color="var(--color-accent)"
 						/>
 					{/if}
 					{#if stats.unassessed > 0}

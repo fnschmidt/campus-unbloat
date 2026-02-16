@@ -20,6 +20,8 @@
 		"@sveltejs/kit": "^2.50.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@tailwindcss/vite": "^4.1.18",
+		"@types/event-calendar__core": "^5.0.0",
+		"@types/event-calendar__time-grid": "^3.4.1",
 		"@types/lodash-es": "^4.17.12",
 		"@types/node": "^22",
 		"eslint": "^9.39.2",
@@ -37,7 +39,12 @@
 		"vite": "^7.3.1"
 	},
 	"dependencies": {
-		"@lucide/svelte": "^0.564.0",
+		"@event-calendar/core": "^5.4.0",
+		"@event-calendar/time-grid": "^3.12.0",
+		"@fortawesome/free-brands-svg-icons": "^7.2.0",
+		"@fortawesome/free-solid-svg-icons": "^7.2.0",
+		"@fortawesome/svelte-fontawesome": "^0.2.4",
+		"@fullcalendar/core": "^6.1.20",
 		"@types/chart.js": "^2.9.41",
 		"chart.js": "^4.5.1",
 		"daisyui": "^5.5.18",

@@ -7,11 +7,11 @@
 	let percentage = Math.round((value / maxValue) * 75); // 75% is max due to bar label/value taking up vspace
 </script>
 
-<div class="flex h-full w-full flex-col items-center justify-end">
-	{value}
+<div class="flex h-full w-full flex-col items-center justify-end gap-1">
+	<div class="text-sm font-medium">{value}</div>
 	<div
-		class="{isMyGrade ? 'bg-primary-500' : 'bg-secondary-500'} w-full"
+		class="w-full rounded-t {isMyGrade ? 'bg-primary' : 'bg-base-content/20'}"
 		style="height: {percentage}%;"
 	></div>
-	<small>{label}</small>
+	<div class="text-xs opacity-70">{label}</div>
 </div>

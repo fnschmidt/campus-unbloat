@@ -83,7 +83,7 @@
 				</div>
 				<div class="card flex w-full flex-col justify-center space-y-2 bg-base-200/80 p-2">
 					<small id="ects">ECTS: {ects} / 180</small>
-					<progress class="progress progress-error" value={parseInt(ects)} max={180}></progress>
+					<progress class="progress progress-accent" value={parseInt(ects)} max={180}></progress>
 
 					<!-- <ProgressBar
 						meter="bg-primary-500"

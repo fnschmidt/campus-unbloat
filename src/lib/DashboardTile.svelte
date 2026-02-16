@@ -3,7 +3,8 @@
 	// import { ProgressRadial } from '@skeletonlabs/skeleton';
 
 	import TileInteractiveElementWrapper from './TilesAndModals/TileInteractiveElementWrapper.svelte';
-	import { Maximize2 } from '@lucide/svelte';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faUpRightAndDownLeftFromCenter } from '@fortawesome/free-solid-svg-icons';
 
 	export let title: string;
 	export let clickable: boolean = true;
@@ -62,7 +63,8 @@
 >
 	<div class="flex w-full flex-row items-center justify-between">
 		{#if clickable}
-			<Maximize2 size={20} strokeWidth={3} />
+			<!-- <Maximize2 size={20} strokeWidth={3} /> -->
+			<FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter}/>
 			<i class="{ready ? '' : 'opacity-40'} fa-solid fa-up-right-and-down-left-from-center w-4"></i>
 		{/if}
 		<header class="w-full grow text-center text-xl font-bold">{title}</header>

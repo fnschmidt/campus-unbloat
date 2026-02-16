@@ -6,19 +6,20 @@
 	// 	popup,
 	// 	type PopupSettings
 	// } from '@skeletonlabs/skeleton';
-	import { type SvelteComponent } from 'svelte';
+	import { untrack } from 'svelte';
 
 	import {
 		// getToastSettings,
-		ToastPayloadClass,
+		// ToastPayloadClass,
 		type CampusDualGrade,
 		type CampusGradeMetadata,
 		type CampusGradeStats
 	} from '$lib/types';
 	// import DashboardModal from '$lib/DashboardModal.svelte';
 	import GradeStatsPopup from '$lib/Popups/GradeStatsPopup.svelte';
-	import DashboardModal from './DashboardModal.svelte';
-	import { Move } from '@lucide/svelte';
+	import DashboardModal from '$lib/DashboardModal.svelte';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 	let {
 		grades,
@@ -27,9 +28,9 @@
 
 	// let modal: HTMLDialogElement | null = $state(null);
 
-	const totalCps = grades.reduce((sum, item) => sum + item.credit_points, 0);
+	const totalCps = untrack(() => grades).reduce((sum, item) => sum + item.credit_points, 0);
 	const weightedAverage =
-		grades.reduce((sum, item) => {
+		untrack(() => grades).reduce((sum, item) => {
 			return sum + parseFloat(item.grade.replace(',', '.')) * item.credit_points; // Convert string to number and add to sum
 		}, 0) / totalCps;
 	// const popupAvgInfo: PopupSettings = {
@@ -40,14 +41,16 @@
 
 	// const toastStore = getToastStore();
 
-	let filteredGrades: Array<CampusDualGrade> = grades;
+	let filteredGrades: Array<CampusDualGrade> = $state(untrack(() => grades));
 
-	let filter: string;
+	let filter = $state('');
 	let filterElement: HTMLInputElement;
-	// $: filterGrades(filter);
+	$effect(() => {
+		filterGrades(filter);
+	});
 
 	// hack to emulate "autocollapse" while being able to collapse the remaining
-	let accordionOpenIndex = 0;
+	let accordionOpenIndex = $state(0);
 
 	function filterGrades(filter: string) {
 		accordionOpenIndex = 0;
@@ -64,11 +67,10 @@
 
 	let gradeStats: CampusGradeStats | null = null;
 	// dirty global used for stats popup
-	let myGrade: number;
-	let popupOpen = false;
+	let myGrade = 0;
+	let gradeStatsModal: HTMLDialogElement | null = null;
 
 	async function getGradeStats(internal_metadata?: CampusGradeMetadata) {
-		if (popupOpen) return;
 		gradeStats = null;
 		const response = await fetch('/api/gradestats', {
 			method: 'POST',
@@ -118,7 +120,7 @@
 
 <svelte:window
 	on:keydown={() => {
-		filterElement.focus();
+		filterElement?.focus();
 	}}
 />
 
@@ -146,90 +148,138 @@
 	><Move size={18} />
 </button> -->
 
-<DashboardModal bind:modal>
+<DashboardModal bind:modal title="Noten">
+	<div class="flex items-center gap-2">
+		<input
+			bind:this={filterElement}
+			bind:value={filter}
+			class="input-bordered input w-full"
+			type="text"
+			placeholder="Suchen..."
+		/>
+		<div
+			class="tooltip tooltip-left"
+			data-tip="Gewichteter Durchschnitt: ∑(Note ⋅ ECTS) / Gesamt-ECTS"
+		>
+			<div class="badge gap-2 badge-lg badge-primary">
+				<i class="fa-solid fa-graduation-cap pointer-events-none"></i>
+				<span class="pointer-events-none font-mono">
+					{totalCps ? weightedAverage.toPrecision(3) : '...'}
+				</span>
+			</div>
+		</div>
+	</div>
+
 	{#if filteredGrades && filteredGrades.length > 0}
-		<Accordion>
+		<div class="space-y-2">
 			{#each filteredGrades as grade, idx (grade)}
-				<AccordionItem
-					open={idx == accordionOpenIndex}
-					on:toggle={(state) => (accordionOpenIndex = state.detail.open ? idx : -1)}
-				>
-					<svelte:fragment slot="lead">
+				<div class="collapse-arrow collapse bg-base-200">
+					<input
+						type="checkbox"
+						checked={idx === accordionOpenIndex}
+						onchange={(e) => {
+							accordionOpenIndex = e.currentTarget.checked ? idx : -1;
+						}}
+					/>
+
+					<div class="collapse-title flex items-center gap-3">
 						<span
-							class="badge-icon p-4 {grade.total_passed === undefined
-								? 'variant-filled'
+							class="badge flex-none badge-lg {grade.total_passed === undefined
+								? 'badge-neutral'
 								: grade.total_passed
-									? 'variant-filled-success'
-									: ' variant-filled-error'}">{grade.grade}</span
+									? 'badge-success'
+									: 'badge-accent'}">{grade.grade}</span
 						>
-					</svelte:fragment>
-					<svelte:fragment slot="summary">{grade.name}</svelte:fragment>
-					<svelte:fragment slot="content">
-						<div class="text-token card w-full space-y-4 p-2">
-							<dl class="list-dl">
-								<div>
-									<span class="badge-icon variant-soft-secondary size-8"
-										><i class="fa-solid fa-calendar"></i></span
-									>
-									<span class="flex-auto">
-										<dt class="font-bold">{grade.akad_period}</dt>
-										<dd class="text-sm opacity-50">Akademische Periode</dd>
+						<span class="font-medium">{grade.name}</span>
+					</div>
+
+					<div class="collapse-content space-y-4">
+						<div class="card bg-base-100 shadow">
+							<div class="card-body gap-4 p-4">
+								<div class="flex items-center gap-3">
+									<span class="badge badge-outline">
+										<!-- <i class="fa-solid fa-calendar"></i> -->
+										 <FontAwesomeIcon icon={faCalendar} />
+										 <!-- <Calendar fill="white"></Calendar> -->
 									</span>
+									<div>
+										<div class="font-bold">{grade.akad_period}</div>
+										<div class="text-sm opacity-60">Akademische Periode</div>
+									</div>
 								</div>
 
-								<div>
-									<span class="badge-icon variant-soft-secondary p-4"
-										><i class="fa-solid fa-coins"></i></span
-									>
-									<span class="flex-auto">
-										<dt class="font-bold">{grade.credit_points}</dt>
-										<dd class="text-sm opacity-50">ECTS-Credits</dd>
+								<div class="flex items-center gap-3">
+									<span class="badge badge-outline">
+										<i class="fa-solid fa-coins"></i>
 									</span>
+									<div>
+										<div class="font-bold">{grade.credit_points}</div>
+										<div class="text-sm opacity-60">ECTS-Credits</div>
+									</div>
 								</div>
-							</dl>
+							</div>
 						</div>
 
-						<div class="text-token card w-full space-y-4 p-2">
-							<dl class="list-dl">
+						<div class="card bg-base-100 shadow">
+							<div class="card-body gap-3 p-4">
 								{#each grade.subgrades as subgrade (subgrade)}
-									<div>
+									<div class="flex items-center gap-3">
 										<span
-											class="badge-icon size-8 flex-shrink-0 {subgrade.passed === undefined
-												? 'variant-filled'
+											class="badge flex-none badge-lg {subgrade.passed === undefined
+												? 'badge-neutral'
 												: subgrade.passed
-													? 'variant-filled-success'
-													: ' variant-filled-error'}">{subgrade.grade}</span
+													? 'badge-success'
+													: 'badge-accent'}">{subgrade.grade}</span
 										>
-										<span class="flex-auto">
-											<dt class="text-sm">{subgrade.name}</dt>
-											<dd class="text-sm opacity-50">
-												{subgrade.wiederholung ? `${subgrade.wiederholung} ⋅ ` : ''}Bekanntgabe: {subgrade.bekanntgabe}
-												⋅ {subgrade.akad_period}
-											</dd>
-										</span>
+
+										<div class="min-w-0 flex-auto">
+											<div class="truncate text-sm">{subgrade.name}</div>
+											<div class="text-sm opacity-60">
+												{subgrade.wiederholung ? `${subgrade.wiederholung} ⋅ ` : ''}Bekanntgabe:
+												{subgrade.bekanntgabe} ⋅ {subgrade.akad_period}
+											</div>
+										</div>
+
 										{#if Boolean(subgrade.internal_metadata)}
 											<button
 												aria-label="Ergebnisse aller Studenten anzeigen"
 												onclick={() => {
 													myGrade = getRoundedGrade(subgrade.grade);
+													gradeStatsModal?.showModal();
 													getGradeStats(subgrade.internal_metadata);
 												}}
-												class="variant-filled btn-icon hrink-0 btn size-8 rounded-md"
+												class="btn btn-square shrink-0 btn-sm btn-primary"
 											>
 												<i class="fa-solid fa-chart-column"></i>
 											</button>
 										{/if}
 									</div>
 								{/each}
-							</dl>
+							</div>
 						</div>
-					</svelte:fragment>
-				</AccordionItem>
+					</div>
+				</div>
 			{/each}
-		</Accordion>
+		</div>
 	{:else}
-		<div class="flex justify-center">
-			<p class="text-token text-lg">Keine Noten gefunden.</p>
+		<div class="py-8 text-center">
+			<p class="text-lg opacity-70">Keine Noten gefunden.</p>
 		</div>
 	{/if}
 </DashboardModal>
+
+<dialog class="modal" bind:this={gradeStatsModal}>
+	<div class="modal-box max-w-3xl">
+		<form method="dialog">
+			<button
+				class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+				aria-label="Schließen"
+			>
+				✕
+			</button>
+		</form>
+
+		<GradeStatsPopup {gradeStats} {myGrade} />
+	</div>
+	<form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
