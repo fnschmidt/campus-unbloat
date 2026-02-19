@@ -203,7 +203,7 @@
 					class="drawer-button btn btn-circle {reminders ? 'btn-accent' : 'btn-soft'}"
 				>
 					{#if reminders}
-						<FontAwesomeIcon icon={faBell}/>
+						<FontAwesomeIcon icon={faBell} />
 					{:else}
 						<span class="loading loading-md loading-spinner"></span>
 					{/if}

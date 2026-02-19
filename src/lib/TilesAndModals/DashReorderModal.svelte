@@ -33,7 +33,7 @@
 	aria-label="Anordnung ändern"
 	onclick={() => modal?.showModal()}
 	class="btn btn-circle btn-primary"
-	><FontAwesomeIcon icon={faUpDownLeftRight}/>
+	><FontAwesomeIcon icon={faUpDownLeftRight} />
 </button>
 
 {#if items}
@@ -42,7 +42,7 @@
 		<div class="modal-box">
 			<!--Knopf zum schließen des Modals-->
 			<form method="dialog">
-						<button class="btn btn-circle"><FontAwesomeIcon icon={faXmark} /></button>
+				<button class="btn btn-circle"><FontAwesomeIcon icon={faXmark} /></button>
 			</form>
 
 			<div
@@ -57,7 +57,7 @@
 						class="rounded-token flex items-center bg-[#ddb8c1] px-4 py-2 dark:bg-[#3b1725]"
 					>
 						<p class="grow">{item.title}</p>
-						<FontAwesomeIcon icon={faBars}/>
+						<FontAwesomeIcon icon={faBars} />
 					</div>
 				{/each}
 			</div>

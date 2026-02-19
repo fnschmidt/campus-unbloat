@@ -30,15 +30,17 @@
 						href="https://github.com/fnschmidt/campus-unbloat"
 						target="_blank"
 						aria-label="Quellcode (GitHub)"
-						class="btn rounded-full btn-outline btn-primary">
+						class="btn rounded-full btn-outline btn-primary"
+					>
 						<!-- <Github size={18} /> -->
-						 <FontAwesomeIcon icon={faGithub} />
+						<FontAwesomeIcon icon={faGithub} />
 						Quellcode</a
 					>
 					<a
 						href="https://github.com/fnschmidt/campus-unbloat/issues/new?assignees=fnschmidt&labels=triage&title=[Feature]:%20/[Bug]:%20...&body=Describe%20a%20bug%20you%20encountered,%20or%20a%20feature%20that%20you%20think%20is%20missing."
 						target="_blank"
-						class="btn rounded-full btn-outline btn-primary"><FontAwesomeIcon icon={faBug}/> Fehler melden</a
+						class="btn rounded-full btn-outline btn-primary"
+						><FontAwesomeIcon icon={faBug} /> Fehler melden</a
 					>
 				</div>
 			</div>
@@ -93,18 +95,19 @@
 						method: 'POST'
 					});
 					goto(resolve('/'));
-				}}>
-				<!-- <LogOut size={16} strokeWidth={3} /> -->
-				<FontAwesomeIcon icon={faRightFromBracket}/>
-				</button
+				}}
 			>
+				<!-- <LogOut size={16} strokeWidth={3} /> -->
+				<FontAwesomeIcon icon={faRightFromBracket} />
+			</button>
 		{/if}
 		{#if page.route.id == '/'}
 			<a
 				href="https://github.com/fnschmidt/campus-unbloat"
 				target="_blank"
 				aria-label="Quellcode (GitHub)"
-				class="btn my-1 rounded-full btn-soft btn-sm"><FontAwesomeIcon icon={faGithub}/>Quellcode</a
+				class="btn my-1 rounded-full btn-soft btn-sm"
+				><FontAwesomeIcon icon={faGithub} />Quellcode</a
 			>
 		{/if}
 	</div>

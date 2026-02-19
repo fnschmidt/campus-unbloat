@@ -199,8 +199,8 @@
 								<div class="flex items-center gap-3">
 									<span class="badge badge-outline">
 										<!-- <i class="fa-solid fa-calendar"></i> -->
-										 <FontAwesomeIcon icon={faCalendar} />
-										 <!-- <Calendar fill="white"></Calendar> -->
+										<FontAwesomeIcon icon={faCalendar} />
+										<!-- <Calendar fill="white"></Calendar> -->
 									</span>
 									<div>
 										<div class="font-bold">{grade.akad_period}</div>
@@ -271,10 +271,7 @@
 <dialog class="modal" bind:this={gradeStatsModal}>
 	<div class="modal-box max-w-3xl">
 		<form method="dialog">
-			<button
-				class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-				aria-label="Schließen"
-			>
+			<button class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm" aria-label="Schließen">
 				✕
 			</button>
 		</form>

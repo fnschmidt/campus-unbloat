@@ -13,14 +13,13 @@
 	const getColor = (color: string) => {
 		let colorVar = getComputedStyle(document.documentElement).getPropertyValue(color);
 		return colorVar;
-	}
-
+	};
 
 	const chartData = {
 		datasets: [
 			{
 				data: hasData ? [stats.successful, stats.unsuccessful, stats.unassessed] : [10, 1.5, 1],
-				backgroundColor: [getColor('--color-primary'),  getColor('--color-accent'), '#c1c1c1'],
+				backgroundColor: [getColor('--color-primary'), getColor('--color-accent'), '#c1c1c1'],
 				borderWidth: 0
 			}
 		]

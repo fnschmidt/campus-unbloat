@@ -7,14 +7,14 @@
 	export let selectedDate: Date;
 </script>
 
-<div class="space-y-1 w-full flex-col justify-center">
+<div class="w-full flex-col justify-center space-y-1">
 	{#if currentEvents.length == 0}
-		<p class="font-semibold text-center">{getAltNoEventString(selectedDate)}</p>
+		<p class="text-center font-semibold">{getAltNoEventString(selectedDate)}</p>
 	{:else}
 		{#each currentEvents as { start, end, title, room, instructor, remarks, color }}
-			<div class="flex flex-row card-transparent-60">
+			<div class="card-transparent-60 flex flex-row">
 				<div class="w-3 rounded-l-3xl" style="background-color: {color};" />
-				<div class="mr-2 py-2 w-full flex flex-col justify-center items-center">
+				<div class="mr-2 flex w-full flex-col items-center justify-center py-2">
 					<div>
 						<strong>{title}</strong>
 						<strong class="mx-1">•</strong>
@@ -34,7 +34,7 @@
 					</p>
 
 					{#if remarks}
-						<div class="mt-0.5 px-2 flex flex-row space-x-2 items-center pr-8">
+						<div class="mt-0.5 flex flex-row items-center space-x-2 px-2 pr-8">
 							<i class="fa-solid fa-info-circle"></i>
 							<p class="text-center">{remarks}</p>
 						</div>

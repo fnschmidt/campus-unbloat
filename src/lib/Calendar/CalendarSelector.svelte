@@ -8,6 +8,8 @@
 		getNextWeekday,
 		isSameDate
 	} from '$lib/TSHelpers/DateHelper';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 	export let disablePadding = false;
 	export let selectedDate: Date = getNextWeekday();
@@ -61,15 +63,16 @@
 <div
 	class="flex flex-row {disablePadding
 		? '-mb-2'
-		: 'pb-2'} space-x-1 w-full justify-between items-center"
+		: 'pb-2'} w-full items-center justify-between space-x-1"
 >
 	<TileInteractiveElementWrapper>
 		<button
 			on:click={() => handleDaySelection(false)}
 			aria-label={weeklySkibbers ? 'vorherige Woche' : 'vorherige Tag'}
-			class="flex-shrink-0 btn-icon variant-filled-primary size-10"
+			class="variant-filled-primary btn btn-circle size-10 shrink-0"
 		>
-			<i class="fa-solid fa-arrow-left" />
+			<!-- <i class="fa-solid fa-arrow-left" /> -->
+			<FontAwesomeIcon icon={faArrowLeft} />
 		</button>
 	</TileInteractiveElementWrapper>
 	<button
@@ -81,8 +84,8 @@
 			}
 		}}
 		class="{dateIsInInterval(weeklySkibbers, selectedDate)
-			? 'opacity-40 pointer-events-none'
-			: ''} dont-open-modal btn-icon flex-shrink-0 bg-surface-200-700-token hover:brightness-105 border border-surface-400-500-token transition-transform h-[42px] w-1/3"
+			? 'pointer-events-none opacity-40'
+			: ''} dont-open-modal bg-surface-200-700-token border-surface-400-500-token btn h-[42px] w-1/3 shrink-0 border transition-transform hover:brightness-105"
 	>
 		<p>{weeklySkibbers ? 'Diese Woche' : 'Heute'}</p>
 	</button>
@@ -91,9 +94,10 @@
 		<button
 			on:click={() => handleDaySelection(true)}
 			aria-label={weeklySkibbers ? 'nächste Woche' : 'nächster Tag'}
-			class="flex-shrink-0 self-end btn-icon variant-filled-primary size-10"
+			class="variant-filled-primary btn btn-circle size-10 shrink-0 self-end"
 		>
-			<i class="fa-solid fa-arrow-right" />
+			<!-- <i class="fa-solid fa-arrow-right" /> -->
+			<FontAwesomeIcon icon={faArrowRight} />
 		</button>
 	</TileInteractiveElementWrapper>
 </div>

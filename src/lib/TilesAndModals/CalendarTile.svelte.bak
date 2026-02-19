@@ -16,7 +16,6 @@
 	export let isReloading: boolean = false;
 
 	const dispatch = createEventDispatcher();
-	let modal: HTMLDialogElement | null = null;
 
 	let events: Array<Event> = [];
 	let currentEvents: Array<Event> = [];
@@ -166,8 +165,9 @@
 		// 		selectedDate: selectedDate,
 		// 		onUpdateSelectedDate: updateSelectedDate -->
 
-{#if $storedEventsUnix && selectedDate}
-	<CalendarModal bind:modal {storedEventsUnix}></CalendarModal>
+{#if $storedEventsUnix && selectedDate}		
+<CalendarModal {storedEventsUnix} {selectedDate} onUpdateSelectedDate={updateSelectedDate}
+></CalendarModal>
 {/if}
 
 <DashboardTile
@@ -175,7 +175,6 @@
 	on:reload={() => {
 		fetchCalendar();
 	}}
-	on:click={() => modal?.showModal()}
 	ready={$storedEventsUnix && ($storedEventsUnix.length != 0 || !loading)}
 	reloadable={true}
 	reloading={isReloading}

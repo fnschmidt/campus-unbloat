@@ -1,151 +1,92 @@
 <script lang="ts">
-	import { Calendar } from '@event-calendar/core';
-	import TimeGrid from '@event-calendar/time-grid';
-	// import { RadioGroup, RadioItem } from '@skeletonlabs/skeleton';
-	import { type SvelteComponent } from 'svelte';
-	import type { EventContentArg } from '@fullcalendar/core';
-	import type { Writable } from 'svelte/store';
-
-	import type { EventUnix, Event } from '$lib/types';
+	import { type EventUnix } from '$lib/types';
 	import DashboardModal from '$lib/DashboardModal.svelte';
-	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
-	import CalendarView from '$lib/Calendar/CalendarView.svelte';
-	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
-	import { dateIsToday, getAltDayString, getNextWeekday, padIt } from '$lib/TSHelpers/DateHelper';
+	import type { Writable } from 'svelte/store';
+	import { Calendar } from '@fullcalendar/core';
+	import timeGridPlugin from '@fullcalendar/timegrid';
+	import { onMount } from 'svelte';
 
-	// export let parent: SvelteComponent;
-	export let storedEventsUnix: Writable<EventUnix[]>;
-	export let selectedDate: Date;
-	export let onUpdateSelectedDate: (newDate: Date) => void;
+	let {
+		modal = $bindable<HTMLDialogElement | null>(null),
+		storedEventsUnix
+	}: {
+		modal: HTMLDialogElement | null;
+		storedEventsUnix: Writable<EventUnix[]>;
+	} = $props();
 
-	let ec: SvelteComponent;
-	let view: string = 'week'; // Default-View (Wochenansicht)
-	let eventList: Event[] = [];
-	let plugins = [TimeGrid];
-	let options = {
-		view: 'timeGridWeek',
-		date: selectedDate,
-		events: eventList,
-		firstDay: 1,
-		hiddenDays: [0, 6],
-		allDaySlot: false,
-		slotMinTime: '07:30:00',
-		slotMaxTime: '19:00:00',
-		displayEventTime: false,
-		displayEventEnd: false,
-		slotWidth: 60,
-		headerToolbar: { start: '', center: '', end: '' },
-		eventContent: function (arg: EventContentArg) {
-			let eventId = 'custom-event-' + arg.event.id;
-			let customHtml =
-				'<div id="' +
-				eventId +
-				'" class="flex flex-col items-center justify-center h-full md:space-y-0 -space-y-5 cursor-pointer transition-transform transform hover:scale-105">' +
-				'<div class="flex justify-center"> <p class="md:text-xl text-sm">' +
-				arg.event.title +
-				' </p> </div>' +
-				'<div class="flex justify-center"> <p class="md:text-sm md:visible invisible">' +
-				(padIt(arg.event.start?.getHours().toString()) +
-					':' +
-					padIt(arg.event.start?.getMinutes().toString()) +
-					' - ' +
-					padIt(arg.event.end?.getHours().toString()) +
-					':' +
-					padIt(arg.event.end?.getMinutes().toString())) +
-				' </p> </div>' +
-				'</div>';
+	onMount(() => {
+		const modalBox = modal?.querySelector<HTMLElement>('.modal-box');
+		const onTransitionEnd = (e: TransitionEvent) => {
+			if (e.propertyName === 'translate') {
+				calendar.updateSize();
+			}
+		};
 
-			setTimeout(() => {
-				let element = document.getElementById(eventId);
-				if (element) {
-					element.addEventListener('click', () => {
-						view = 'day';
-						selectedDate = arg.event.start as Date;
-						if (onUpdateSelectedDate) {
-							onUpdateSelectedDate(selectedDate);
-						}
-					});
+		modalBox?.addEventListener('transitionend', onTransitionEnd);
+
+		const calDefaultMinHour = 8;
+		const calDefaultMin = `${String(calDefaultMinHour).padStart(2, '0')}:00:00`;
+		const calDefaultMaxHour = 18;
+		const calDefaultMax = `${String(calDefaultMaxHour).padStart(2, '0')}:00:00`;
+
+		let calendarEl: HTMLElement = document.getElementById('calendar')!;
+
+		let calendar = new Calendar(calendarEl, {
+			datesSet(info) {
+				const viewStart = info.start.getTime();
+				const viewEnd = info.end.getTime();
+
+				const eventsInView = $storedEventsUnix.filter(
+					(e) => e.end > viewStart && e.start < viewEnd
+				);
+
+				if (eventsInView.length) {
+					const minStart = Math.min(...eventsInView.map((e) => e.start));
+					const maxEnd = Math.max(...eventsInView.map((e) => e.end));
+
+					const minDate = new Date(minStart);
+					const maxDate = new Date(maxEnd);
+
+					const pad = (n: number) => String(n).padStart(2, '0');
+					const toTime = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+
+					if (minDate.getHours() < calDefaultMinHour) {
+						calendar.setOption('slotMinTime', toTime(minDate));
+					} else {
+						calendar.setOption('slotMinTime', calDefaultMin);
+					}
+					if (maxDate.getHours() > calDefaultMaxHour) {
+						calendar.setOption('slotMaxTime', toTime(maxDate));
+					} else {
+						calendar.setOption('slotMaxTime', calDefaultMax);
+					}
+				} else {
+					calendar.setOption('slotMinTime', calDefaultMin);
+					calendar.setOption('slotMaxTime', calDefaultMax);
 				}
-			}, 0);
+			},
+			plugins: [timeGridPlugin],
+			initialView: 'timeGridWeekdays',
+			initialEvents: $storedEventsUnix,
+			locale: 'de',
+			weekends: false,
+			slotMinTime: calDefaultMin,
+			slotMaxTime: calDefaultMax,
+			height: '100%',
+			// handleWindowResize: false,
+			views: {
+				timeGridWeekdays: {
+					type: 'timeGridWeek',
+					allDaySlot: false
+				}
+			}
+		});
 
-			return { html: customHtml };
-		}
-	};
-
-	$: if ($storedEventsUnix) options.events = unixEventsToEvents($storedEventsUnix);
-
-	function handleSelectedDateChange(e: CustomEvent<Date>) {
-		selectedDate = e.detail;
-		if (ec) {
-			ec.setOption('date', selectedDate);
-		}
-		if (onUpdateSelectedDate) {
-			onUpdateSelectedDate(selectedDate);
-		}
-	}
-
-	function setToToday() {
-		selectedDate = getNextWeekday();
-		if (ec) {
-			ec.setOption('date', selectedDate);
-		}
-		if (onUpdateSelectedDate) {
-			onUpdateSelectedDate(selectedDate);
-		}
-	}
+		// console.log("init", calendarEl.getBoundingClientRect());
+		calendar.render();
+	});
 </script>
 
-<DashboardModal
-	title="Kalender{view == 'week' || dateIsToday(selectedDate)
-		? ''
-		: ` (${getAltDayString(selectedDate)})`}"
->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div
-		on:keydown={(e) => {
-			if (['ArrowLeft', 'ArrowRight'].includes(e.key)) {
-				e.preventDefault();
-			}
-		}}
-		class="radio-group-container w-full flex justify-center pb-2"
-	>
-		<p>hier radiogroup</p>
-		<!-- <RadioGroup
-			bind:group={view}
-			active="variant-filled-primary"
-			hover="hover:variant-soft-primary"
-		>
-			<RadioItem value="week" bind:group={view} name="calendar-view" label="Wochenübersicht"
-				>Wochenübersicht</RadioItem
-			>
-			<RadioItem value="day" bind:group={view} name="calendar-view" label="Tagesansicht"
-				>Tagesansicht</RadioItem
-			>
-		</RadioGroup> -->
-	</div>
-
-	{#if view === 'day'}
-		{@const currentDayEvents = getCurrentEvents(options.events, selectedDate)}
-		<div class="w-full h-full flex justify-center">
-			<div class="flex flex-col items-center justify-center md:w-3/5 w-4/5">
-				<button class="w-full" on:click|stopPropagation={() => {}}>
-					<CalendarSelector
-						on:dateChanged={handleSelectedDateChange}
-						on:setToToday={setToToday}
-						{selectedDate}
-					/>
-				</button>
-				<CalendarView currentEvents={currentDayEvents} {selectedDate} />
-			</div>
-		</div>
-	{:else if view === 'week'}
-		<CalendarSelector
-			disablePadding={true}
-			on:dateChanged={handleSelectedDateChange}
-			on:setToToday={setToToday}
-			{selectedDate}
-			weeklySkibbers={true}
-		/>
-		<Calendar bind:this={ec} {plugins} {options} />
-	{/if}
+<DashboardModal bind:modal title="Kalender">
+	<div id="calendar"></div>
 </DashboardModal>

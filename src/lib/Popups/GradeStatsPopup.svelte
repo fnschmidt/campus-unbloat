@@ -15,7 +15,7 @@
 
 {#if !(gradeStats && maxValue)}
 	<div class="flex h-56 flex-col items-center justify-center gap-3">
-		<span class="loading loading-spinner loading-lg"></span>
+		<span class="loading loading-lg loading-spinner"></span>
 		<span class="text-sm opacity-70">lade…</span>
 	</div>
 {:else}

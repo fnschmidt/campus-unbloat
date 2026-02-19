@@ -7,8 +7,6 @@
 	function getPercentLabel() {
 		return `${Math.round((value / total) * 100)}%`;
 	}
-
-	console.log(color);
 </script>
 
 <!-- <li class="conic-item bg-primary-hover-token">
