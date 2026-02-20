@@ -120,11 +120,11 @@
 		currentEvents = getCurrentEvents(events, selectedDate);
 	}
 
-	function updateSelectedDate(newDate: Date) {
-		selectedDate = newDate;
-		// modalComponent.props!.selectedDate = selectedDate;
-		currentEvents = getCurrentEvents(events, selectedDate);
-	}
+	// function updateSelectedDate(newDate: Date) {
+	// 	selectedDate = newDate;
+	// 	// modalComponent.props!.selectedDate = selectedDate;
+	// 	currentEvents = getCurrentEvents(events, selectedDate);
+	// }
 
 	async function fetchCalendar() {
 		isReloading = true;
@@ -190,4 +190,5 @@
 	<div class="flex h-full w-full flex-col items-center justify-center">
 		<CalendarView {currentEvents} {selectedDate} />
 	</div>
+	<!-- <Calendar plugins={[]} {} ></Calendar> -->
 </DashboardTile>
