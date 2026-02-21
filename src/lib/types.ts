@@ -47,8 +47,10 @@ export interface EventUnix {
 	end: number;
 	title: string;
 	room: string;
+	sroom: string;
 	instructor: string;
 	textColor: string;
+	description: string;
 	remarks: string;
 	color: string;
 }
@@ -64,7 +66,10 @@ export interface Event {
 	color: string;
 	extendedProps: {
 		room: string;
+		sroom: string;
 		instructor: string;
+		description: string;
+		remarks: string;
 	};
 }
 

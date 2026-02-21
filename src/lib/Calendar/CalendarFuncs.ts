@@ -10,7 +10,10 @@ export function unixEventsToEvents(uEvents: Array<EventUnix>): Array<Event> {
 			end: new Date(event.end),
 			extendedProps: {
 				room: event.room,
-				instructor: event.instructor
+				sroom: event.sroom,
+				instructor: event.instructor,
+				description: event.description,
+				remarks: event.remarks
 			}
 		});
 	});

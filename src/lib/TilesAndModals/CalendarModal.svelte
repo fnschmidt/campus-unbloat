@@ -7,6 +7,8 @@
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 	import { unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
+	import EventInfoModal from '$lib/components/calendar/EventInfoModal.svelte';
+	import { SvelteDate } from 'svelte/reactivity';
 
 	let ec: SvelteComponent | undefined = $state();
 	let {
@@ -17,18 +19,10 @@
 		storedEventsUnix: Writable<EventUnix[]> | undefined;
 	} = $props();
 
-	type Content = string | { html: string } | { domNodes: Node[] };
-
-	interface ModuleEvent {
-		title: Content;
-		extendedProps: Record<string, unknown>;
-	}
+	let eventInfoModal = $state<HTMLDialogElement | null>(null);
+	let selectedEvent = $state<unknown | null>(null);
 
 	type dayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-	interface contentInfo {
-		event: ModuleEvent;
-		timeText: string;
-	}
 
 	const hiddenDays: dayOfWeek[] = [0, 6];
 
@@ -43,11 +37,16 @@
 			center: '',
 			end: ''
 		},
-		eventClick: (info: unknown) => {
-			console.log(info);
+		eventClick: (info: { event: unknown }) => {
+			selectedEvent = info.event;
+			eventInfoModal?.showModal();
 		},
-		eventContent: (info: contentInfo) => {
-			return `${info.timeText}\n${info.event.title}${info.event.extendedProps.room ? `, Raum ${info.event.extendedProps.room}` : ''}`;
+		eventContent: (info: {
+			event: { title?: unknown; extendedProps?: Record<string, unknown> };
+			timeText: string;
+		}) => {
+			const sroom = info.event.extendedProps?.sroom;
+			return `${info.timeText}\n${info.event.title}${typeof sroom === 'string' ? `, Raum ${sroom}` : ''}`;
 		}
 	});
 
@@ -61,11 +60,19 @@
 	let isCurrentWeek = $state(() => {
 		const view = ec?.getView();
 		if (!view) return false;
-		const { currentStart: start, currentEnd: end } = view;
-		const current = new Date();
-		return start <= current && current <= end;
+
+		const start = new SvelteDate(view.currentStart);
+		start.setDate(start.getDate() + 1);
+
+		const end = new SvelteDate(view.currentEnd);
+		end.setDate(end.getDate() + 1);
+
+		const now = new Date();
+		return start <= now && now <= end;
 	});
 </script>
+
+<EventInfoModal bind:modal={eventInfoModal} event={selectedEvent} />
 
 <DashboardModal bind:modal title="Kalender">
 	<div class="flex w-full flex-row items-center">
@@ -77,7 +84,11 @@
 		<button
 			disabled={isCurrentWeek()}
 			onclick={() => {
-				if (ec) ec.setOption('date', new Date());
+				let today = new SvelteDate();
+				// sonntag in deutschland ^= teil der vorh. Woche, in USA schon nächste woche, daher -1
+				today.setDate(today.getDate() - 1);
+
+				if (ec) ec.setOption('date', today);
 			}}
 			class="btn mr-1 rounded-full btn-sm btn-accent">Heute</button
 		>

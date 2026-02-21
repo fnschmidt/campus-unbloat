@@ -74,7 +74,7 @@
 		listDaySideFormat: () => '',
 		noEventsContent: 'Es findet keine Vorlesung statt! 🚀',
 		eventContent: (info: contentInfo) => {
-			return `${info.timeText}\n${info.event.title}${info.event.extendedProps.room ? `, Raum ${info.event.extendedProps.room}` : ''}`;
+			return `${info.timeText}\n${info.event.title}${info.event.extendedProps.sroom ? `, Raum ${info.event.extendedProps.sroom}` : ''}`;
 		}
 	};
 
@@ -95,9 +95,11 @@
 				start: element.start,
 				end: element.end,
 				title: element.title.split('-')[1],
-				room: element.room.split(' ')[0],
+				room: element.room,
+				sroom: element.sroom,
 				instructor: element.instructor,
 				textColor: element.font_color,
+				description: element.description,
 				remarks: element.remarks,
 				color: element.color
 			});
