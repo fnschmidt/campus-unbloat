@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { type Event, type EventUnix } from '$lib/types';
+	import { type EventUnix } from '$lib/types';
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import type { Writable } from 'svelte/store';
-	// import { Calendar } from '@fullcalendar/core';
-	// import timeGridPlugin from '@fullcalendar/timegrid';
-	import { onMount } from 'svelte';
+	import { type SvelteComponent } from 'svelte';
 	import { Calendar, TimeGrid } from '@event-calendar/core';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+	import { unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
 
+	let ec: SvelteComponent | undefined = $state();
 	let {
 		modal = $bindable<HTMLDialogElement | null>(null),
 		storedEventsUnix
@@ -15,35 +17,10 @@
 		storedEventsUnix: Writable<EventUnix[]> | undefined;
 	} = $props();
 
-	let events: Event[] | undefined = $derived(
-		$storedEventsUnix?.map((ev) => ({
-			...ev,
-			start: new Date(ev.start),
-			end: new Date(ev.end),
-			extendedProps: {
-				room: ev.room,
-				instructor: ev.instructor
-			}
-		}))
-	);
-
 	type Content = string | { html: string } | { domNodes: Node[] };
 
 	interface ModuleEvent {
-		// id: number | string;
-		// start: Date;
-		// end: Date;
-		// resourceIds: Array<number | string>;
-		// allDay: boolean;
 		title: Content;
-		// editable: boolean | undefined;
-		// startEditable: boolean | undefined;
-		// durationEditable: boolean | undefined;
-		// display: 'auto' | 'background' | 'ghost' | 'preview' | 'pointer';
-		// backgroundColor: string | undefined;
-		// textColor: string | undefined;
-		// classNames: string[];
-		// styles: string[];
 		extendedProps: Record<string, unknown>;
 	}
 
@@ -51,110 +28,66 @@
 	interface contentInfo {
 		event: ModuleEvent;
 		timeText: string;
-		// view: View;
 	}
-	// interface View {
-	// 	type: string;
-	// 	// title: string;
-	// 	// currentStart: Date;
-	// 	// currentEnd: Date;
-	// 	// activeStart: Date;
-	// 	// activeEnd: Date;
-	// }
 
 	const hiddenDays: dayOfWeek[] = [0, 6];
-	// const calDefaultMinHour = 8;
-	// const calDefaultMin = `${String(calDefaultMinHour).padStart(2, '0')}:00:00`;
-	// const calDefaultMaxHour = 18;
-	// const calDefaultMax = `${String(calDefaultMaxHour).padStart(2, '0')}:00:00`;
 
 	let options = $derived({
 		view: 'timeGridWeek',
-		events: events ?? [],
+		events: unixEventsToEvents($storedEventsUnix ?? []),
 		height: '100%',
 		allDaySlot: false,
 		hiddenDays: hiddenDays,
-		// slotMinTime: calDefaultMin,
-		// slotMaxTime: calDefaultMax,
+		// headerToolbar: {
+		// 	start: '',
+		// 	center: '',
+		// 	end: ''
+		// },
 		eventClick: (info: unknown) => {
 			console.log(info);
 		},
 		eventContent: (info: contentInfo) => {
 			return `${info.timeText}\n${info.event.title}${info.event.extendedProps.room ? `, Raum ${info.event.extendedProps.room}` : ''}`;
 		}
-
-		// eventContent: (info: EventContentInfo) => {
-		// 	// // console.log(info.event);
-		// 	// console.log(info);
-		// 	// return "11:00\nZSPM2";
-		// 	// return "abc";
-		// }
-
-		// EventSources: $storedEventsUnix,
-		// events: $storedEventsUnix
 	});
 
-	onMount(() => {
-		// const modalBox = modal?.querySelector<HTMLElement>('.modal-box');
-		// const onTransitionEnd = (e: TransitionEvent) => {
-		// 	if (e.propertyName === 'translate') {
-		// 		calendar.updateSize();
-		// 	}
-		// };
-		// modalBox?.addEventListener('transitionend', onTransitionEnd);
-		// let calendarEl: HTMLElement = document.getElementById('calendar')!;
-		// let calendar = new Calendar(calendarEl, {
-		// 	datesSet(info) {
-		// 		const viewStart = info.start.getTime();
-		// 		const viewEnd = info.end.getTime();
-		// 		const eventsInView = $storedEventsUnix.filter(
-		// 			(e) => e.end > viewStart && e.start < viewEnd
-		// 		);
-		// 		if (eventsInView.length) {
-		// 			const minStart = Math.min(...eventsInView.map((e) => e.start));
-		// 			const maxEnd = Math.max(...eventsInView.map((e) => e.end));
-		// 			const minDate = new Date(minStart);
-		// 			const maxDate = new Date(maxEnd);
-		// 			const pad = (n: number) => String(n).padStart(2, '0');
-		// 			const toTime = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
-		// 			if (minDate.getHours() < calDefaultMinHour) {
-		// 				calendar.setOption('slotMinTime', toTime(minDate));
-		// 			} else {
-		// 				calendar.setOption('slotMinTime', calDefaultMin);
-		// 			}
-		// 			if (maxDate.getHours() > calDefaultMaxHour) {
-		// 				calendar.setOption('slotMaxTime', toTime(maxDate));
-		// 			} else {
-		// 				calendar.setOption('slotMaxTime', calDefaultMax);
-		// 			}
-		// 		} else {
-		// 			calendar.setOption('slotMinTime', calDefaultMin);
-		// 			calendar.setOption('slotMaxTime', calDefaultMax);
-		// 		}
-		// 	},
-		// 	plugins: [timeGridPlugin],
-		// 	initialView: 'timeGridWeekdays',
-		// 	initialEvents: $storedEventsUnix,
-		// 	locale: 'de',
-		// 	weekends: false,
-		// 	slotMinTime: calDefaultMin,
-		// 	slotMaxTime: calDefaultMax,
-		// 	height: '100%',
-		// 	// handleWindowResize: false,
-		// 	views: {
-		// 		timeGridWeekdays: {
-		// 			type: 'timeGridWeek',
-		// 			allDaySlot: false
-		// 		}
-		// 	}
-		// });
-		// // console.log("init", calendarEl.getBoundingClientRect());
-		// calendar.render();
+	$effect(() => {
+		if (storedEventsUnix && $storedEventsUnix) {
+			const events = unixEventsToEvents($storedEventsUnix);
+			ec!.setOption('events', events);
+		}
 	});
 </script>
 
 <DashboardModal bind:modal title="Kalender">
-	<!-- <div id="calendar"></div> -->
+	<div class="flex w-full flex-row items-center">
+		{#if ec}
+			<p class="font-bold">{ec.getView().title}</p>
+		{/if}
+		<span class="grow"></span>
 
-	<Calendar plugins={[TimeGrid]} {options} />
+		<button
+			onclick={() => {
+				if (ec) console.log(ec);
+			}}
+			class="btn rounded-full btn-sm btn-accent">Heute</button
+		>
+
+		<div class="join grid grid-cols-2 gap-0.5">
+			<button
+				class="btn join-item w-10 rounded-l-full btn-sm btn-accent"
+				onclick={() => {
+					if (ec) ec.prev();
+				}}><FontAwesomeIcon icon={faArrowLeft} /></button
+			>
+			<button
+				class="btn join-item w-10 rounded-r-full btn-sm btn-accent"
+				onclick={() => {
+					if (ec) ec.next();
+				}}><FontAwesomeIcon icon={faArrowRight} /></button
+			>
+		</div>
+	</div>
+
+	<Calendar bind:this={ec} plugins={[TimeGrid]} {options} />
 </DashboardModal>

@@ -1,16 +1,13 @@
 <script lang="ts">
-	// import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { onMount, type SvelteComponent } from 'svelte';
 	import { type Writable } from 'svelte/store';
 
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import CalendarModal from './CalendarModal.svelte';
-	// import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
-	// import CalendarView from '$lib/Calendar/CalendarView.svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import { getAltDayString } from '$lib/TSHelpers/DateHelper';
 	import { unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
-	import type { EventUnix, Event } from '$lib/types';
+	import type { EventUnix } from '$lib/types';
 	import { Calendar, List } from '@event-calendar/core';
 	import TileInteractiveElementWrapper from './TileInteractiveElementWrapper.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
@@ -20,12 +17,11 @@
 
 	let modal: HTMLDialogElement | null = $state(null);
 
-	let events: Array<Event> = [];
 	let storedEventsUnix: Writable<EventUnix[]> | undefined = $state();
 	let lastEventUpdate: Writable<Date | null>;
 	let loading: boolean = $state(true);
 
-	let calendarElement: SvelteComponent | undefined = $state();
+	let ec: SvelteComponent | undefined = $state();
 
 	type fetchedCalendar = Array<{
 		title: string;
@@ -63,9 +59,9 @@
 
 	const hiddenDays: dayOfWeek[] = [0, 6];
 
-	let options = $derived({
+	let options = {
 		view: 'listDay',
-		events: events,
+		events: unixEventsToEvents($storedEventsUnix ?? []),
 		height: '100%',
 		width: '100%',
 		hiddenDays: hiddenDays,
@@ -80,13 +76,11 @@
 		eventContent: (info: contentInfo) => {
 			return `${info.timeText}\n${info.event.title}${info.event.extendedProps.room ? `, Raum ${info.event.extendedProps.room}` : ''}`;
 		}
-	});
+	};
 
 	onMount(async () => {
 		storedEventsUnix = persistentStore('storedEvents', []);
 		lastEventUpdate = persistentStore('lastEventUpdate', null);
-
-		events = unixEventsToEvents($storedEventsUnix!);
 
 		if (olderThanOneHour($lastEventUpdate)) {
 			fetchCalendar();
@@ -146,9 +140,9 @@
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
 
 		storedEventsUnix!.set(parsedUnix);
-		events = unixEventsToEvents(parsedUnix);
+		ec!.setOption('events', unixEventsToEvents(parsedUnix));
 
-		if (events.length > 0) {
+		if (options.events.length > 0) {
 			lastEventUpdate.set(new Date());
 		}
 
@@ -168,29 +162,29 @@
 	reloadable={true}
 	reloading={isReloading}
 >
-	<TileInteractiveElementWrapper add_class="w-full">
-		<div class="flex w-full flex-row items-center justify-between">
-			{#if calendarElement}
-				<p class="font-bold">{getAltDayString(calendarElement.getOption('date'))}</p>
-			{/if}
+	<div class="flex w-full flex-row items-center justify-between">
+		{#if ec}
+			<p class="font-bold">{getAltDayString(ec.getOption('date'))}</p>
+		{/if}
+		<TileInteractiveElementWrapper>
 			<div class="join grid grid-cols-2 gap-0.5">
 				<button
 					class="btn join-item w-10 rounded-l-full btn-sm btn-accent"
 					onclick={() => {
-						if (calendarElement) calendarElement.prev();
+						if (ec) ec.prev();
 					}}><FontAwesomeIcon icon={faArrowLeft} /></button
 				>
 				<button
 					class="btn join-item w-10 rounded-r-full btn-sm btn-accent"
 					onclick={() => {
-						if (calendarElement) calendarElement.next();
+						if (ec) ec.next();
 					}}><FontAwesomeIcon icon={faArrowRight} /></button
 				>
 			</div>
-		</div>
-	</TileInteractiveElementWrapper>
+		</TileInteractiveElementWrapper>
+	</div>
 	<span class="tileCalendar w-full">
-		<Calendar bind:this={calendarElement} plugins={[List]} {options}></Calendar>
+		<Calendar bind:this={ec} plugins={[List]} {options}></Calendar>
 	</span>
 </DashboardTile>
 
@@ -205,6 +199,9 @@
 		--ec-day-bg-color: undefined !important;
 	}
 	:global(.tileCalendar .ec-day) {
+		--ec-bg-color: none;
+	}
+	:global(.tileCalendar .ec-no-events) {
 		--ec-bg-color: none;
 	}
 	:global(.tileCalendar .ec) {
