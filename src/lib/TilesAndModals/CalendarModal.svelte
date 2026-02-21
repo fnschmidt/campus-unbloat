@@ -38,11 +38,11 @@
 		height: '100%',
 		allDaySlot: false,
 		hiddenDays: hiddenDays,
-		// headerToolbar: {
-		// 	start: '',
-		// 	center: '',
-		// 	end: ''
-		// },
+		headerToolbar: {
+			start: '',
+			center: '',
+			end: ''
+		},
 		eventClick: (info: unknown) => {
 			console.log(info);
 		},
@@ -57,6 +57,14 @@
 			ec!.setOption('events', events);
 		}
 	});
+
+	let isCurrentWeek = $state(() => {
+		const view = ec?.getView();
+		if (!view) return false;
+		const { currentStart: start, currentEnd: end } = view;
+		const current = new Date();
+		return start <= current && current <= end;
+	});
 </script>
 
 <DashboardModal bind:modal title="Kalender">
@@ -67,10 +75,11 @@
 		<span class="grow"></span>
 
 		<button
+			disabled={isCurrentWeek()}
 			onclick={() => {
-				if (ec) console.log(ec);
+				if (ec) ec.setOption('date', new Date());
 			}}
-			class="btn rounded-full btn-sm btn-accent">Heute</button
+			class="btn mr-1 rounded-full btn-sm btn-accent">Heute</button
 		>
 
 		<div class="join grid grid-cols-2 gap-0.5">

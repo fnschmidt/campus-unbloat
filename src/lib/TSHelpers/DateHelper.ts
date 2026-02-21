@@ -12,20 +12,7 @@ export function getNextMonday(date: Date): Date {
 	return date;
 }
 
-// export function getNextWeekday(): Date {
-// 	const today = new Date();
-// 	const day = today.getDay();
-
-// 	if (day === 6 || day === 0) {
-// 		// Saturday or Sunday
-// 		return getNextMonday(today);
-// 	}
-
-// 	return today;
-// }
-
 export function getAltDayString(selectedDate: Date): string {
-	// date is guaranteed to not be today
 	const today = new Date();
 	// dates have to be set to YYYY-MM-DD only, so that the rounding in getDiffInDays won't get mixed up in hours/minutes/seconds from events
 	today.setHours(0, 0, 0, 0);
@@ -42,18 +29,18 @@ export function getAltDayString(selectedDate: Date): string {
 		'Samstag'
 	];
 	const months = [
-		'Januar',
-		'Februar',
+		'Jan.',
+		'Feb.',
 		'März',
 		'April',
 		'Mai',
 		'Juni',
 		'Juli',
-		'August',
-		'September',
-		'Oktober',
-		'November',
-		'Dezember'
+		'Aug.',
+		'Sept.',
+		'Okt.',
+		'Nov.',
+		'Dez.'
 	];
 
 	switch (diffInDays) {
@@ -64,7 +51,6 @@ export function getAltDayString(selectedDate: Date): string {
 		case 1:
 			return `Morgen (${weekDays[selectedDate.getDay()]})`;
 		default:
-			// return `${weekDays[selectedDate.getDay()]}, ${padIt(String(selectedDate.getDate()))}.${padIt(String(selectedDate.getMonth() + 1))}.`;
 			return `${weekDays[selectedDate.getDay()]}, ${padIt(String(selectedDate.getDate()))}. ${months[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`;
 	}
 }
@@ -85,26 +71,6 @@ export function getDiffInDays(date1: Date, date2: Date): number {
 	// Return the difference in days, rounded to the nearest integer
 	return Math.round(diffInDays);
 }
-
-// export function dateIsThisWeek(date: Date): boolean {
-// 	const today = getNextWeekday();
-// 	const dayOfWeek = today.getDay(); // Sonntag = 0, Montag = 1, ..., Samstag = 6
-
-// 	// Berechne den Anfang der Woche (Montag)
-// 	const mondayOfThisWeek = new Date(today);
-// 	mondayOfThisWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // Rückwärts zu Montag
-
-// 	// Berechne das Ende der Woche (Sonntag)
-// 	const sundayOfThisWeek = new Date(mondayOfThisWeek);
-// 	sundayOfThisWeek.setDate(mondayOfThisWeek.getDate() + 6); // Vorwärts zu Sonntag
-
-// 	// Bereinigen der Zeiten auf Mitternacht, damit wir nur das Datum vergleichen
-// 	mondayOfThisWeek.setHours(0, 0, 0, 0);
-// 	sundayOfThisWeek.setHours(23, 59, 59, 999);
-
-// 	// Vergleich des übergebenen Datums mit dem Wochenzeitraum
-// 	return date >= mondayOfThisWeek && date <= sundayOfThisWeek;
-// }
 
 export function isSameDate(date1: Date, date2: Date): boolean {
 	return (
