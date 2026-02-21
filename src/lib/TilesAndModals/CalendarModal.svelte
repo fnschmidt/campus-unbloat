@@ -12,11 +12,11 @@
 		storedEventsUnix
 	}: {
 		modal: HTMLDialogElement | null;
-		storedEventsUnix: Writable<EventUnix[]>;
+		storedEventsUnix: Writable<EventUnix[]> | undefined;
 	} = $props();
 
-	let events: Event[] = $derived(
-		$storedEventsUnix.map((ev) => ({
+	let events: Event[] | undefined = $derived(
+		$storedEventsUnix?.map((ev) => ({
 			...ev,
 			start: new Date(ev.start),
 			end: new Date(ev.end),
@@ -70,7 +70,7 @@
 
 	let options = $derived({
 		view: 'timeGridWeek',
-		events: events,
+		events: events ?? [],
 		height: '100%',
 		allDaySlot: false,
 		hiddenDays: hiddenDays,
@@ -155,5 +155,6 @@
 
 <DashboardModal bind:modal title="Kalender">
 	<!-- <div id="calendar"></div> -->
+
 	<Calendar plugins={[TimeGrid]} {options} />
 </DashboardModal>

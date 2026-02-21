@@ -65,9 +65,9 @@
 		}
 	}
 
-	let gradeStats: CampusGradeStats | null = null;
+	let gradeStats: CampusGradeStats | null = $state(null);
 	// dirty global used for stats popup
-	let myGrade = 0;
+	let myGrade: number = $state(0);
 	let gradeStatsModal: HTMLDialogElement | null = null;
 
 	async function getGradeStats(internal_metadata?: CampusGradeMetadata) {

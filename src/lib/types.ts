@@ -62,6 +62,10 @@ export interface Event {
 	instructor: string;
 	remarks: string;
 	color: string;
+	extendedProps: {
+		room: string;
+		instructor: string;
+	};
 }
 
 //////// API response types

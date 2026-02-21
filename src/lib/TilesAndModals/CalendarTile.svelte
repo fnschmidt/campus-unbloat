@@ -1,33 +1,31 @@
 <script lang="ts">
 	// import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
-	import { onMount, createEventDispatcher } from 'svelte';
+	import { onMount, type SvelteComponent } from 'svelte';
 	import { type Writable } from 'svelte/store';
 
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import CalendarModal from './CalendarModal.svelte';
-	import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
-	import CalendarView from '$lib/Calendar/CalendarView.svelte';
+	// import CalendarSelector from '$lib/Calendar/CalendarSelector.svelte';
+	// import CalendarView from '$lib/Calendar/CalendarView.svelte';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
-	import { dateIsToday, getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
-	import { getCurrentEvents, unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
-	import { ToastPayloadClass } from '$lib/types';
-	import type { EventUnix, Event, ToastPayload } from '$lib/types';
+	import { getAltDayString } from '$lib/TSHelpers/DateHelper';
+	import { unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
+	import type { EventUnix, Event } from '$lib/types';
+	import { Calendar, List } from '@event-calendar/core';
+	import TileInteractiveElementWrapper from './TileInteractiveElementWrapper.svelte';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-	export let isReloading: boolean = false;
+	let isReloading: boolean = $state(false);
 
-	const dispatch = createEventDispatcher();
-	let modal: HTMLDialogElement | null = null;
+	let modal: HTMLDialogElement | null = $state(null);
 
 	let events: Array<Event> = [];
-	let currentEvents: Array<Event> = [];
-	// let modalStore = getModalStore();
-	// let modalComponent: ModalComponent;
-	// let modal: ModalSettings;
-	let storedEventsUnix: Writable<EventUnix[]>;
+	let storedEventsUnix: Writable<EventUnix[]> | undefined = $state();
 	let lastEventUpdate: Writable<Date | null>;
-	let selectedDate: Date = getNextWeekday();
-	// workaround for the case of loading being finished and there being 0 events
-	let loading = true;
+	let loading: boolean = $state(true);
+
+	let calendarElement: SvelteComponent | undefined = $state();
 
 	type fetchedCalendar = Array<{
 		title: string;
@@ -45,26 +43,50 @@
 		remarks: string;
 	}>;
 
+	interface contentInfo {
+		event: ModuleEvent;
+		timeText: string;
+	}
+
+	type Content = string | { html: string } | { domNodes: Node[] };
+
+	interface ModuleEvent {
+		title: Content;
+		extendedProps: Record<string, unknown>;
+	}
+
+	type dayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+	interface contentInfo {
+		event: ModuleEvent;
+		timeText: string;
+	}
+
+	const hiddenDays: dayOfWeek[] = [0, 6];
+
+	let options = $derived({
+		view: 'listDay',
+		events: events,
+		height: '100%',
+		width: '100%',
+		hiddenDays: hiddenDays,
+		headerToolbar: {
+			start: '',
+			center: '',
+			end: ''
+		},
+		listDayFormat: () => '',
+		listDaySideFormat: () => '',
+		noEventsContent: 'Es findet keine Vorlesung statt! 🚀',
+		eventContent: (info: contentInfo) => {
+			return `${info.timeText}\n${info.event.title}${info.event.extendedProps.room ? `, Raum ${info.event.extendedProps.room}` : ''}`;
+		}
+	});
+
 	onMount(async () => {
 		storedEventsUnix = persistentStore('storedEvents', []);
 		lastEventUpdate = persistentStore('lastEventUpdate', null);
 
-		events = unixEventsToEvents($storedEventsUnix);
-		currentEvents = getCurrentEvents(events, selectedDate);
-
-		// modalComponent = {
-		// 	ref: CalendarModal,
-		// 	props: {
-		// 		storedEventsUnix: storedEventsUnix,
-		// 		selectedDate: selectedDate,
-		// 		onUpdateSelectedDate: updateSelectedDate
-		// 	}
-		// };
-
-		// modal = {
-		// 	type: 'component',
-		// 	component: modalComponent
-		// };
+		events = unixEventsToEvents($storedEventsUnix!);
 
 		if (olderThanOneHour($lastEventUpdate)) {
 			fetchCalendar();
@@ -90,16 +112,6 @@
 		return newEventsUnix;
 	}
 
-	function handleSelectedDateChange(e: CustomEvent<Date>) {
-		selectedDate = e.detail;
-		// modalComponent.props!.selectedDate = selectedDate;
-		currentEvents = getCurrentEvents(events, selectedDate);
-	}
-
-	// function openModal() {
-	// 	modalStore.trigger(modal);
-	// }
-
 	function olderThanOneHour(s_date: Date | null): boolean {
 		if (!s_date) {
 			return true;
@@ -114,64 +126,40 @@
 		return diffHours > 1;
 	}
 
-	function setToToday() {
-		selectedDate = getNextWeekday();
-		// modalComponent.props!.selectedDate = selectedDate;
-		currentEvents = getCurrentEvents(events, selectedDate);
-	}
-
-	// function updateSelectedDate(newDate: Date) {
-	// 	selectedDate = newDate;
-	// 	// modalComponent.props!.selectedDate = selectedDate;
-	// 	currentEvents = getCurrentEvents(events, selectedDate);
-	// }
-
 	async function fetchCalendar() {
 		isReloading = true;
 		const res = await fetch('/api/stundenplan');
 
-		if (!res.ok) {
-			let error = await res.text();
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
+		// if (!res.ok) {
+		// 	let error = await res.text();
+		// 	let payload: ToastPayload = {
+		// 		text: error,
+		// 		class: ToastPayloadClass.error
+		// 	};
 
-			dispatch('showToast', payload);
-			return;
-		}
+		// 	// dispatch('showToast', payload);
+		// 	return;
+		// }
 		loading = false;
 
 		let fetchedCalendar = await res.json();
 		let parsedUnix = fetchedToUnixEvents(fetchedCalendar);
 
-		storedEventsUnix.set(parsedUnix);
+		storedEventsUnix!.set(parsedUnix);
 		events = unixEventsToEvents(parsedUnix);
 
 		if (events.length > 0) {
 			lastEventUpdate.set(new Date());
 		}
 
-		currentEvents = getCurrentEvents(events, selectedDate);
-
 		isReloading = false;
 	}
 </script>
 
-<!-- {#if grades !== undefined}
-	<GradesModal bind:modal {grades}></GradesModal>
-{/if} -->
-
-<!-- // 		storedEventsUnix: storedEventsUnix,
-		// 		selectedDate: selectedDate,
-		// 		onUpdateSelectedDate: updateSelectedDate -->
-
-{#if $storedEventsUnix && selectedDate}
-	<CalendarModal bind:modal {storedEventsUnix}></CalendarModal>
-{/if}
+<CalendarModal bind:modal {storedEventsUnix}></CalendarModal>
 
 <DashboardTile
-	title="Kalender{dateIsToday(selectedDate) ? '' : ` (${getAltDayString(selectedDate)})`}"
+	title="Kalender"
 	on:reload={() => {
 		fetchCalendar();
 	}}
@@ -180,15 +168,46 @@
 	reloadable={true}
 	reloading={isReloading}
 >
-	<svelte:fragment slot="header">
-		<CalendarSelector
-			on:dateChanged={handleSelectedDateChange}
-			on:setToToday={setToToday}
-			{selectedDate}
-		/>
-	</svelte:fragment>
-	<div class="flex h-full w-full flex-col items-center justify-center">
-		<CalendarView {currentEvents} {selectedDate} />
-	</div>
-	<!-- <Calendar plugins={[]} {} ></Calendar> -->
+	<TileInteractiveElementWrapper add_class="w-full">
+		<div class="flex w-full flex-row items-center justify-between">
+			{#if calendarElement}
+				<p class="font-bold">{getAltDayString(calendarElement.getOption('date'))}</p>
+			{/if}
+			<div class="join grid grid-cols-2 gap-0.5">
+				<button
+					class="btn join-item w-10 rounded-l-full btn-sm btn-accent"
+					onclick={() => {
+						if (calendarElement) calendarElement.prev();
+					}}><FontAwesomeIcon icon={faArrowLeft} /></button
+				>
+				<button
+					class="btn join-item w-10 rounded-r-full btn-sm btn-accent"
+					onclick={() => {
+						if (calendarElement) calendarElement.next();
+					}}><FontAwesomeIcon icon={faArrowRight} /></button
+				>
+			</div>
+		</div>
+	</TileInteractiveElementWrapper>
+	<span class="tileCalendar w-full">
+		<Calendar bind:this={calendarElement} plugins={[List]} {options}></Calendar>
+	</span>
 </DashboardTile>
+
+<style>
+	:global(.tileCalendar .ec-list) {
+		width: 100%;
+	}
+	:global(.tileCalendar .ec-day-head) {
+		display: none;
+	}
+	:global(.tileCalendar .ec-day-bg-color) {
+		--ec-day-bg-color: undefined !important;
+	}
+	:global(.tileCalendar .ec-day) {
+		--ec-bg-color: none;
+	}
+	:global(.tileCalendar .ec) {
+		--ec-border-color: none;
+	}
+</style>

@@ -12,17 +12,17 @@ export function getNextMonday(date: Date): Date {
 	return date;
 }
 
-export function getNextWeekday(): Date {
-	const today = new Date();
-	const day = today.getDay();
+// export function getNextWeekday(): Date {
+// 	const today = new Date();
+// 	const day = today.getDay();
 
-	if (day === 6 || day === 0) {
-		// Saturday or Sunday
-		return getNextMonday(today);
-	}
+// 	if (day === 6 || day === 0) {
+// 		// Saturday or Sunday
+// 		return getNextMonday(today);
+// 	}
 
-	return today;
-}
+// 	return today;
+// }
 
 export function getAltDayString(selectedDate: Date): string {
 	// date is guaranteed to not be today
@@ -32,15 +32,40 @@ export function getAltDayString(selectedDate: Date): string {
 	selectedDate.setHours(0, 0, 0, 0);
 
 	const diffInDays = getDiffInDays(selectedDate, today);
-	const weekDays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+	const weekDays = [
+		'Sonntag',
+		'Montag',
+		'Dienstag',
+		'Mittwoch',
+		'Donnerstag',
+		'Freitag',
+		'Samstag'
+	];
+	const months = [
+		'Januar',
+		'Februar',
+		'März',
+		'April',
+		'Mai',
+		'Juni',
+		'Juli',
+		'August',
+		'September',
+		'Oktober',
+		'November',
+		'Dezember'
+	];
 
 	switch (diffInDays) {
 		case -1:
-			return 'Gestern';
+			return `Gestern (${weekDays[selectedDate.getDay()]})`;
+		case 0:
+			return `Heute (${weekDays[selectedDate.getDay()]})`;
 		case 1:
-			return 'Morgen';
+			return `Morgen (${weekDays[selectedDate.getDay()]})`;
 		default:
-			return `${weekDays[selectedDate.getDay()]}, ${padIt(String(selectedDate.getDate()))}.${padIt(String(selectedDate.getMonth() + 1))}.`;
+			// return `${weekDays[selectedDate.getDay()]}, ${padIt(String(selectedDate.getDate()))}.${padIt(String(selectedDate.getMonth() + 1))}.`;
+			return `${weekDays[selectedDate.getDay()]}, ${padIt(String(selectedDate.getDate()))}. ${months[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`;
 	}
 }
 
@@ -61,31 +86,25 @@ export function getDiffInDays(date1: Date, date2: Date): number {
 	return Math.round(diffInDays);
 }
 
-export function dateIsToday(date: Date): boolean {
-	const today = new Date();
+// export function dateIsThisWeek(date: Date): boolean {
+// 	const today = getNextWeekday();
+// 	const dayOfWeek = today.getDay(); // Sonntag = 0, Montag = 1, ..., Samstag = 6
 
-	return isSameDate(today, date);
-}
+// 	// Berechne den Anfang der Woche (Montag)
+// 	const mondayOfThisWeek = new Date(today);
+// 	mondayOfThisWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // Rückwärts zu Montag
 
-export function dateIsThisWeek(date: Date): boolean {
-	const today = getNextWeekday();
-	const dayOfWeek = today.getDay(); // Sonntag = 0, Montag = 1, ..., Samstag = 6
+// 	// Berechne das Ende der Woche (Sonntag)
+// 	const sundayOfThisWeek = new Date(mondayOfThisWeek);
+// 	sundayOfThisWeek.setDate(mondayOfThisWeek.getDate() + 6); // Vorwärts zu Sonntag
 
-	// Berechne den Anfang der Woche (Montag)
-	const mondayOfThisWeek = new Date(today);
-	mondayOfThisWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)); // Rückwärts zu Montag
+// 	// Bereinigen der Zeiten auf Mitternacht, damit wir nur das Datum vergleichen
+// 	mondayOfThisWeek.setHours(0, 0, 0, 0);
+// 	sundayOfThisWeek.setHours(23, 59, 59, 999);
 
-	// Berechne das Ende der Woche (Sonntag)
-	const sundayOfThisWeek = new Date(mondayOfThisWeek);
-	sundayOfThisWeek.setDate(mondayOfThisWeek.getDate() + 6); // Vorwärts zu Sonntag
-
-	// Bereinigen der Zeiten auf Mitternacht, damit wir nur das Datum vergleichen
-	mondayOfThisWeek.setHours(0, 0, 0, 0);
-	sundayOfThisWeek.setHours(23, 59, 59, 999);
-
-	// Vergleich des übergebenen Datums mit dem Wochenzeitraum
-	return date >= mondayOfThisWeek && date <= sundayOfThisWeek;
-}
+// 	// Vergleich des übergebenen Datums mit dem Wochenzeitraum
+// 	return date >= mondayOfThisWeek && date <= sundayOfThisWeek;
+// }
 
 export function isSameDate(date1: Date, date2: Date): boolean {
 	return (

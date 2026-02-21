@@ -4,7 +4,11 @@
 
 	import TileInteractiveElementWrapper from './TilesAndModals/TileInteractiveElementWrapper.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-	import { faUpRightAndDownLeftFromCenter } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCheck,
+		faRotateRight,
+		faUpRightAndDownLeftFromCenter
+	} from '@fortawesome/free-solid-svg-icons';
 
 	export let title: string;
 	export let clickable: boolean = true;
@@ -65,13 +69,13 @@
 		{#if clickable}
 			<!-- <Maximize2 size={20} strokeWidth={3} /> -->
 			<FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
-			<i class="{ready ? '' : 'opacity-40'} fa-solid fa-up-right-and-down-left-from-center w-4"></i>
+			<!-- <i class="{ready ? '' : 'opacity-40'} fa-solid fa-up-right-and-down-left-from-center w-4"></i> -->
 		{/if}
 		<header class="w-full grow text-center text-xl font-bold">{title}</header>
 		{#if reloadable}
 			<TileInteractiveElementWrapper>
 				{#if reloading}
-					loading
+					<span class="loading -mt-0.5 -mr-0.5 mb-0.5 ml-0.5 loading-sm loading-spinner"></span>
 					<!-- <ProgressRadial
 						width="w-4 scale-125"
 						stroke={80}
@@ -81,6 +85,19 @@
 					/> -->
 				{:else}
 					<button
+						on:click={() => dispatch('reload')}
+						class="group hover:cursor-pointer"
+						aria-label="Daten neu laden"
+					>
+						<!-- <span clas -->
+						<span class="block group-hover:hidden">
+							<FontAwesomeIcon icon={faCheck} class="block group-hover:hidden" />
+						</span>
+						<span class="hidden group-hover:block">
+							<FontAwesomeIcon icon={faRotateRight} class="hidden group-hover:block" />
+						</span>
+					</button>
+					<!-- <button
 						id="calendarReloadButton"
 						aria-label="Daten neu laden"
 						class="btn-icon fa-solid fa-check size-4 shrink-0 scale-110"
@@ -93,7 +110,7 @@
 							document.getElementById('calendarReloadButton')?.classList.add('fa-check');
 							document.getElementById('calendarReloadButton')?.classList.remove('fa-rotate-right');
 						}}
-					></button>
+					></button> -->
 				{/if}
 			</TileInteractiveElementWrapper>
 		{:else if clickable}
