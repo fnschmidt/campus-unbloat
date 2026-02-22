@@ -9,3 +9,14 @@
 		<div class="ec-auto-dark" style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
+<style>
+	body {
+		background-color: var(--color-base-200);
+	}
+	/* dark mode body background color */
+	@media (prefers-color-scheme: dark) {
+		body {
+			background-color: var(--color-base-300);
+		}
+	}
+</style>

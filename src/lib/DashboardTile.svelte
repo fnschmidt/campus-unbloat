@@ -63,7 +63,7 @@
 	disabled={!clickable}
 	class="{pointerPressed
 		? 'scale-[97%]'
-		: ''} flex h-full w-full flex-col items-center space-y-1 rounded-2xl bg-[#ddb8c1] p-4 pt-2 pb-3 transition-transform sm:w-96 dark:bg-[#3b1725]"
+		: ''} flex h-full w-full flex-col items-center space-y-1 rounded-2xl bg-base-100 p-4 pt-2 pb-3 shadow-2xl/10 transition-transform sm:w-96"
 >
 	<div class="flex w-full flex-row items-center justify-between">
 		{#if clickable}
