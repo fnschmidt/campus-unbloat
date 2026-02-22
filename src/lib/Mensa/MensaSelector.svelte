@@ -4,16 +4,33 @@
 	// import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 
 	import type { Canteen } from '../types';
-	import { getNextWeekday } from '$lib/TSHelpers/DateHelper';
+	import { getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+	import type { SvelteDate } from 'svelte/reactivity';
 	// import OpenMensaModal from '$lib/TilesAndModals/OpenMensaModal.svelte';
 
-	export let canteenSelectListValue: number | undefined = undefined;
-	export let selectedCanteen: Writable<number>;
-	export let selectedOpenMensaName: Writable<string>;
-	export let canteens: Array<Canteen>;
-	export let selectedDate: Date = getNextWeekday();
+	// export let canteenSelectListValue: number | undefined = undefined;
+	// export let selectedCanteen: Writable<number>;
+	// export let selectedOpenMensaName: Writable<string>;
+	// export let canteens: Array<Canteen>;
+	// export let selectedDate: Date = getNextWeekday();
+
+	let {
+		canteenSelectListValue = $bindable<number | undefined>(undefined),
+		selectedCanteen,
+		selectedOpenMensaName,
+		canteens,
+		// selectedDate = $bindable<Date>(getNextWeekday()),
+	}: {
+		canteenSelectListValue: number | undefined;
+		selectedCanteen: Writable<number>;
+		selectedOpenMensaName: Writable<string>;
+		canteens: Array<Canteen>;
+		// selectedDate: Date;
+	} = $props();
+
+	let selectedDate: SvelteDate = $state(getNextWeekday() as SvelteDate);
 
 	// key to reload canteens dropdown when an "openmensa" canteen is added to the list
 	let unique = {};
@@ -105,10 +122,29 @@
 	}}
 />
 
+<div class="flex w-full flex-row items-center justify-between">
+	<p class="font-bold">{getAltDayString(selectedDate)}</p>
+
+	<div class="join grid grid-cols-2 gap-0.5">
+		<button
+			class="btn join-item w-10 rounded-l-full btn-sm btn-accent"
+			onclick={() => {
+				handleDaySelection(false);
+			}}><FontAwesomeIcon icon={faArrowLeft} /></button
+		>
+		<button
+			class="btn join-item w-10 rounded-r-full btn-sm btn-accent"
+			onclick={() => {
+				handleDaySelection(true);
+			}}><FontAwesomeIcon icon={faArrowRight} /></button
+		>
+	</div>
+</div>
+
 <div class="mb-2 flex w-full items-center space-x-1">
 	<button
 		aria-label="Vorheriger Tag"
-		on:click={() => handleDaySelection(false)}
+		onclick={() => handleDaySelection(false)}
 		class="btn btn-circle size-10 shrink-0 btn-accent"
 	>
 		<FontAwesomeIcon icon={faArrowLeft} />
@@ -118,7 +154,7 @@
 			aria-label="Mensa auswählen"
 			class="select transition-none"
 			bind:value={canteenSelectListValue}
-			on:change={() => {
+			onchange={() => {
 				changeCanteen(canteenSelectListValue);
 			}}
 			use:canteens_populated
@@ -130,7 +166,7 @@
 	{/key}
 	<button
 		aria-label="Nächster Tag"
-		on:click={() => handleDaySelection(true)}
+		onclick={() => handleDaySelection(true)}
 		class="btn btn-circle size-10 shrink-0 btn-accent"
 	>
 		<FontAwesomeIcon icon={faArrowRight} />
