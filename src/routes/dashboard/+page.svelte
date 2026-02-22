@@ -27,7 +27,7 @@
 	import CalendarTile from '$lib/TilesAndModals/CalendarTile.svelte';
 	// import ExamSignupTile from '$lib/TilesAndModals/ExamSignupTile.svelte';
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
-	// import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
+	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
 	// import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 	import { every as _every, some as _some, isEqual as _isEqual } from 'lodash-es';
@@ -46,7 +46,7 @@
 		BasicInfoTile,
 		GradesTile,
 		CalendarTile,
-		// MensaTile,
+		MensaTile,
 		// ExamSignupTile,
 		BlockplanTile
 	};

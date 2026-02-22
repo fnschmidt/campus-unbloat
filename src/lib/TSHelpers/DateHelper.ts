@@ -12,6 +12,18 @@ export function getNextMonday(date: Date): Date {
 	return date;
 }
 
+export function getNextWeekday(): Date {
+	const today = new Date();
+	const day = today.getDay();
+
+	if (day === 6 || day === 0) {
+		// Saturday or Sunday
+		return getNextMonday(today);
+	}
+
+	return today;
+}
+
 export function getAltDayString(selectedDate: Date): string {
 	const today = new Date();
 	// dates have to be set to YYYY-MM-DD only, so that the rounding in getDiffInDays won't get mixed up in hours/minutes/seconds from events

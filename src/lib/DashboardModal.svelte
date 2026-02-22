@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faXmark } from '@fortawesome/free-solid-svg-icons';
+	import { setContext } from 'svelte';
 	let { modal = $bindable<HTMLDialogElement | null>(null), children, title } = $props();
+
+	setContext('dashboardModal', true);
 </script>
 
 <dialog id="my_modal_1" class="modal" bind:this={modal}>

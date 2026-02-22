@@ -49,6 +49,7 @@
 		"daisyui": "^5.5.18",
 		"lodash-es": "^4.17.23",
 		"svelte-dnd-action": "^0.9.69",
+		"svelte-media-queries": "^1.6.2",
 		"svelte-portal": "^2.2.1"
 	}
 }

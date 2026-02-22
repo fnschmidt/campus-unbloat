@@ -84,9 +84,7 @@
 <DashboardTile title="Noten" on:click={() => modal?.showModal()} ready={Boolean(stats && grades)}>
 	{#if $gradesCountStore != grades.length}
 		<div class="flex w-full justify-end">
-			<span class="variant-filled-secondary relative -top-8 left-2 -mb-6 badge rounded-xl"
-				>Neue Noten</span
-			>
+			<span class="relative -top-8 left-2 -mb-6 badge rounded-full badge-primary">Neue Noten</span>
 		</div>
 	{/if}
 
