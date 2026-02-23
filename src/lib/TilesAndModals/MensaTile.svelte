@@ -122,7 +122,7 @@
 {/if}
 
 <DashboardTile title="Mensa" on:click={() => modal?.showModal()} ready={Boolean(canteens)}>
-	{#if $showMealsInTile && canteens && selectedCanteen && selectedOpenMensaName}
+	<!-- 	{#if $showMealsInTile && canteens && selectedCanteen && selectedOpenMensaName}
 		<TileInteractiveElementWrapper add_class="w-full">
 			{#key unique}
 				<MensaSelector
@@ -134,9 +134,10 @@
 				/>
 			{/key}
 		</TileInteractiveElementWrapper>
-	{/if}
+	{/if} -->
+	click me
 
-	<TileInteractiveElementWrapper add_class="w-full">
+	<!-- <TileInteractiveElementWrapper add_class="w-full">
 		{#if $showMealsInTile && mealGroups && expandedMealCategories}
 			<MealView
 				bind:expandedMealCategories
@@ -144,7 +145,7 @@
 				on:mealGroupClicked={() => modal?.show()}
 			/>
 		{/if}
-	</TileInteractiveElementWrapper>
+	</TileInteractiveElementWrapper> -->
 
 	<!-- {#each mealGroups as mg (mg)}
 		bruh

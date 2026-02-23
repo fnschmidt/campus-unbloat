@@ -2,7 +2,7 @@
 	import type { Writable } from 'svelte/store';
 
 	import type { MealGroup } from '../types';
-	import MealViewAccordion from './MealViewAccordion.svelte';
+	// import MealViewAccordion from './MealViewAccordion.svelte';
 	import MediaQuery from 'svelte-media-queries';
 	import { createEventDispatcher, getContext, mount } from 'svelte';
 	import MealGroupContainer from './MealGroupContainer.svelte';
@@ -116,17 +116,24 @@
 <MediaQuery query="(min-width: 640px)" let:matches>
 	{#if mealGroups.length === 0}
 		<p class="pt-2 text-center">Keine Gerichte verfügbar.</p>
-	{:else if isInsideDashboardModal && matches && mealGroups.length > 1}
+	{:else if matches && mealGroups.length > 1}
 		<div class="grid grid-cols-2 gap-3">
-			<MealViewAccordion alwaysExpanded={true} mealGroups={column1} {expandedMealCategories} />
-			<MealViewAccordion alwaysExpanded={true} mealGroups={column2} {expandedMealCategories} />
+			<div class="flex flex-col space-y-2">
+				{#each column1 as mealGroup (mealGroup)}
+					<MealGroupContainer {mealGroup} />
+				{/each}
+			</div>
+			<div class="flex flex-col space-y-2">
+				{#each column2 as mealGroup (mealGroup)}
+					<MealGroupContainer {mealGroup} />
+				{/each}
+			</div>
 		</div>
 	{:else}
-		<MealViewAccordion
-			alwaysExpanded={isInsideDashboardModal}
-			{mealGroups}
-			{expandedMealCategories}
-			on:mealGroupClicked={() => dispatch('mealGroupClicked')}
-		/>
+		<div class="flex flex-col space-y-2">
+			{#each mealGroups as mealGroup (mealGroup)}
+				<MealGroupContainer {mealGroup} />
+			{/each}
+		</div>
 	{/if}
 </MediaQuery>

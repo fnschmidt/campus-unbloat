@@ -65,6 +65,7 @@
 		height: '100%',
 		width: '100%',
 		hiddenDays: hiddenDays,
+		highlightedDays: [],
 		headerToolbar: {
 			start: '',
 			center: '',
@@ -197,14 +198,12 @@
 	:global(.tileCalendar .ec-day-head) {
 		display: none;
 	}
-	:global(.tileCalendar .ec-day-bg-color) {
-		--ec-day-bg-color: undefined !important;
-	}
-	:global(.tileCalendar .ec-day) {
-		--ec-bg-color: none;
-	}
+	:global(.tileCalendar .ec-day),
 	:global(.tileCalendar .ec-no-events) {
 		--ec-bg-color: none;
+	}
+	:global(.tileCalendar .ec-today) {
+		--ec-day-bg-color: none;
 	}
 	:global(.tileCalendar .ec) {
 		--ec-border-color: none;

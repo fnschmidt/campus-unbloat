@@ -20,7 +20,7 @@
 		canteenSelectListValue = $bindable<number | undefined>(undefined),
 		selectedCanteen,
 		selectedOpenMensaName,
-		canteens,
+		canteens
 		// selectedDate = $bindable<Date>(getNextWeekday()),
 	}: {
 		canteenSelectListValue: number | undefined;
