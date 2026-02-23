@@ -1,26 +1,22 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-
 	import type { MealGroup } from '../types';
-	// import MealViewAccordion from './MealViewAccordion.svelte';
 	import MediaQuery from 'svelte-media-queries';
-	import { createEventDispatcher, getContext, mount } from 'svelte';
+	import { mount } from 'svelte';
 	import MealGroupContainer from './MealGroupContainer.svelte';
 	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 
-	const isInsideDashboardModal: boolean = getContext('dashboardModal') ?? false;
-	export let expandedMealCategories: Writable<Array<string>>;
 	export let mealGroups: Array<MealGroup>;
+	let matches = false;
+	$: if (matches && mealGroups.length > 1) splitGroups(mealGroups);
 
-	const dispatch = createEventDispatcher();
+	// const dispatch = createEventDispatcher();
 
 	let column1: MealGroup[];
 	let column2: MealGroup[];
-	$: splitGroups(mealGroups);
+	// $: splitGroups(mealGroups);
 
 	async function splitGroups(mealGroups: MealGroup[]) {
-		if (!isInsideDashboardModal) return;
-
+		console.log('split');
 		let heights: number[] = getMealgroupHeights(mealGroups);
 		[column1, column2] = balanceElementsDP(mealGroups, heights);
 	}
@@ -113,7 +109,7 @@
 </script>
 
 <!-- hacky -->
-<MediaQuery query="(min-width: 640px)" let:matches>
+<MediaQuery query="(min-width: 640px)" let:matches bind:matches>
 	{#if mealGroups.length === 0}
 		<p class="pt-2 text-center">Keine Gerichte verfügbar.</p>
 	{:else if matches && mealGroups.length > 1}

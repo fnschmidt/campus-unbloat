@@ -1,3 +1,5 @@
+import type { SvelteDate } from 'svelte/reactivity';
+
 export function getDateAsUrlParam(date: Date): string {
 	const year = date.getFullYear();
 	const month = padIt((date.getMonth() + 1).toString());
@@ -24,13 +26,15 @@ export function getNextWeekday(): Date {
 	return today;
 }
 
-export function getAltDayString(selectedDate: Date): string {
+export function getAltDayString(selectedDate: SvelteDate): string {
 	const today = new Date();
+	const selectedDateCopy = new Date();
+	selectedDateCopy.setTime(selectedDate.getTime());
 	// dates have to be set to YYYY-MM-DD only, so that the rounding in getDiffInDays won't get mixed up in hours/minutes/seconds from events
 	today.setHours(0, 0, 0, 0);
-	selectedDate.setHours(0, 0, 0, 0);
+	selectedDateCopy.setHours(0, 0, 0, 0);
 
-	const diffInDays = getDiffInDays(selectedDate, today);
+	const diffInDays = getDiffInDays(selectedDateCopy, today);
 	const weekDays = [
 		'Sonntag',
 		'Montag',
@@ -57,13 +61,13 @@ export function getAltDayString(selectedDate: Date): string {
 
 	switch (diffInDays) {
 		case -1:
-			return `Gestern (${weekDays[selectedDate.getDay()]})`;
+			return `Gestern (${weekDays[selectedDateCopy.getDay()]})`;
 		case 0:
-			return `Heute (${weekDays[selectedDate.getDay()]})`;
+			return `Heute (${weekDays[selectedDateCopy.getDay()]})`;
 		case 1:
-			return `Morgen (${weekDays[selectedDate.getDay()]})`;
+			return `Morgen (${weekDays[selectedDateCopy.getDay()]})`;
 		default:
-			return `${weekDays[selectedDate.getDay()]}, ${padIt(String(selectedDate.getDate()))}. ${months[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`;
+			return `${weekDays[selectedDateCopy.getDay()]}, ${padIt(String(selectedDateCopy.getDate()))}. ${months[selectedDateCopy.getMonth()]} ${selectedDateCopy.getFullYear()}`;
 	}
 }
 
@@ -82,6 +86,12 @@ export function getDiffInDays(date1: Date, date2: Date): number {
 	const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 	// Return the difference in days, rounded to the nearest integer
 	return Math.round(diffInDays);
+}
+
+export function dateIsToday(date: Date): boolean {
+	const today = new Date();
+
+	return isSameDate(today, date);
 }
 
 export function isSameDate(date1: Date, date2: Date): boolean {

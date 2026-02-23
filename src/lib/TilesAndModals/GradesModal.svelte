@@ -19,7 +19,7 @@
 	import GradeStatsPopup from '$lib/Popups/GradeStatsPopup.svelte';
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-	import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+	import { faCalendar, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 	let {
 		grades,
@@ -269,11 +269,18 @@
 </DashboardModal>
 
 <dialog class="modal" bind:this={gradeStatsModal}>
-	<div class="modal-box max-w-3xl">
-		<form method="dialog">
-			<button class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm" aria-label="Schließen">
-				✕
-			</button>
+	<div class="modal-box max-w-2xl">
+		<form method="dialog" class="flex items-center justify-between">
+			{#if gradeStats}
+				<h4 class="text-center text-lg font-semibold">
+					{gradeStats.one +
+						gradeStats.two +
+						gradeStats.three +
+						gradeStats.four +
+						gradeStats.ronmodus} Ergebnisse
+				</h4>
+			{/if}
+			<button class="btn btn-circle"><FontAwesomeIcon icon={faXmark} /></button>
 		</form>
 
 		<GradeStatsPopup {gradeStats} {myGrade} />

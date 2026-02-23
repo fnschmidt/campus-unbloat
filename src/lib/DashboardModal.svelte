@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faXmark } from '@fortawesome/free-solid-svg-icons';
-	import { setContext } from 'svelte';
 	let { modal = $bindable<HTMLDialogElement | null>(null), children, title } = $props();
-
-	setContext('dashboardModal', true);
 </script>
 
-<dialog id="my_modal_1" class="modal" bind:this={modal}>
+<dialog class="modal" bind:this={modal}>
 	<!-- volle Höhe, Column-Layout, nur Content scrollt -->
 	<div
 		class="modal-box flex h-full w-full max-w-full flex-col overflow-hidden rounded-none p-0 lg:h-[calc(100%-80px)] lg:w-3xl lg:rounded-2xl"
@@ -21,7 +18,6 @@
 				<div class="m-0 modal-action">
 					<form method="dialog">
 						<button class="btn btn-circle"><FontAwesomeIcon icon={faXmark} /></button>
-						<!-- <button class="btn btn-accent"><X /></button> -->
 					</form>
 				</div>
 			</div>

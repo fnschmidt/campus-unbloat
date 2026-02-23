@@ -1,54 +1,59 @@
 <script lang="ts">
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import MealView from '$lib/Mensa/MealView.svelte';
+	import { fetchMeals, fetchOpenMeals } from '$lib/Mensa/MensaFuncs';
 	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
-	import type { Canteen, MealGroup } from '$lib/types';
-	import type { Writable } from 'svelte/store';
+	import type { MealGroup, MensaSelectorEvent } from '$lib/types';
+	import type { SvelteDate } from 'svelte/reactivity';
 
-	// export let onSelectedChange: (date: Date) => Promise<MealGroup[]>;
-	// export let parent: SvelteComponent;
-	// export let canteens: Array<Canteen>;
-	// export let selectedCanteen: Writable<number>;
-	// export let selectedOpenMensaName: Writable<string>;
-	// export let expandedMealCategories: Writable<Array<string>>;
-	// export let mealGroups: Array<MealGroup> | undefined = undefined;
-	// export let selectedDate: Date;
+	let mealGroups: Array<MealGroup> | undefined = $state();
 
 	let {
-		modal = $bindable<HTMLDialogElement | null>(null),
-		mealGroups,
-		expandedMealCategories,
-		onSelectedChange,
-		selectedCanteen,
-		selectedOpenMensaName,
-		canteens,
-		selectedDate
+		modal = $bindable<HTMLDialogElement | null>(null)
 	}: {
 		modal: HTMLDialogElement | null;
-		mealGroups: MealGroup[] | undefined;
-		expandedMealCategories: Writable<Array<string>> | undefined;
-		onSelectedChange: (date: Date) => Promise<MealGroup[]>;
-		selectedCanteen: Writable<number>;
-		selectedOpenMensaName: Writable<string>;
-		canteens: Array<Canteen>;
-		selectedDate: Date;
 	} = $props();
 
-	async function handleSelectChange(e: CustomEvent<Date>) {
-		if (e.detail) selectedDate = e.detail;
-		mealGroups = await onSelectedChange(selectedDate);
+	async function handleMealsFetch(
+		date: SvelteDate,
+		canteenId: number
+	): Promise<MealGroup[] | undefined> {
+		try {
+			if (canteenId > 0) {
+				mealGroups = await fetchMeals(date, canteenId);
+				// modalComponent.props!.mealGroups = mealGroups;
+				return mealGroups;
+			} else {
+				mealGroups = await fetchOpenMeals(date, canteenId * -1);
+				// modalComponent.props!.mealGroups = mealGroups;
+				return mealGroups;
+			}
+		} catch (e) {
+			window.alert(e);
+		}
+		// } catch (e) {
+		// 	if (e instanceof Error) {
+		// 		let payload: ToastPayload = {
+		// 			text: e.message,
+		// 			class: ToastPayloadClass.error
+		// 		};
+
+		// 		dispatch('showToast', payload);
+		// 	}
+		// }
+	}
+
+	async function handleSelectChange(e: CustomEvent<MensaSelectorEvent>) {
+		if (!e.detail) return;
+
+		mealGroups = await handleMealsFetch(e.detail.date, e.detail.canteenId);
 	}
 </script>
 
 <DashboardModal bind:modal title="Mensa">
-	<MensaSelector
-		on:selectChanged={handleSelectChange}
-		{selectedCanteen}
-		{selectedOpenMensaName}
-		{canteens}
-		{selectedDate}
-	/>
-	{#if mealGroups && expandedMealCategories}
-		<MealView {expandedMealCategories} {mealGroups} />
+	<MensaSelector on:selectChanged={handleSelectChange} />
+
+	{#if mealGroups}
+		<MealView {mealGroups} />
 	{/if}
 </DashboardModal>

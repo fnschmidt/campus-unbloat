@@ -1,5 +1,7 @@
 // import type { ToastSettings } from '@skeletonlabs/skeleton';
 
+import type { SvelteDate } from 'svelte/reactivity';
+
 export type ToastPayload = {
 	text: string;
 	class: ToastPayloadClass;
@@ -9,6 +11,11 @@ export enum ToastPayloadClass {
 	warn,
 	error
 }
+
+export type MensaSelectorEvent = {
+	date: SvelteDate;
+	canteenId: number;
+};
 
 // export function getToastSettings(payload: ToastPayload): ToastSettings {
 // 	let bg: string;

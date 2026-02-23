@@ -1,34 +1,55 @@
 <script lang="ts">
-	import { createEventDispatcher, getContext, tick } from 'svelte';
-	import type { Writable } from 'svelte/store';
-	// import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { createEventDispatcher, onMount } from 'svelte';
 
-	import type { Canteen } from '../types';
-	import { getAltDayString, getNextWeekday } from '$lib/TSHelpers/DateHelper';
+	import type { Canteen, MensaSelectorEvent } from '../types';
+	import { getAltDayString, getNextWeekday, isSameDate } from '$lib/TSHelpers/DateHelper';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-	import type { SvelteDate } from 'svelte/reactivity';
-	// import OpenMensaModal from '$lib/TilesAndModals/OpenMensaModal.svelte';
+	import { SvelteDate } from 'svelte/reactivity';
+	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
+	import type { Writable } from 'svelte/store';
 
-	// export let canteenSelectListValue: number | undefined = undefined;
-	// export let selectedCanteen: Writable<number>;
-	// export let selectedOpenMensaName: Writable<string>;
-	// export let canteens: Array<Canteen>;
-	// export let selectedDate: Date = getNextWeekday();
+	let canteens: Array<Canteen> = $state([]);
+	let canteenSelectListValue: number | undefined = $state();
+	let selectedCanteen: Writable<number> | undefined = $state();
+	let selectedOpenMensaName: Writable<string> | undefined = $state();
 
-	let {
-		canteenSelectListValue = $bindable<number | undefined>(undefined),
-		selectedCanteen,
-		selectedOpenMensaName,
-		canteens
-		// selectedDate = $bindable<Date>(getNextWeekday()),
-	}: {
-		canteenSelectListValue: number | undefined;
-		selectedCanteen: Writable<number>;
-		selectedOpenMensaName: Writable<string>;
-		canteens: Array<Canteen>;
-		// selectedDate: Date;
-	} = $props();
+	$effect(() => {
+		if (canteenSelectListValue) {
+			notifyParent();
+		}
+	});
+
+	async function notifyParent() {
+		const payload: MensaSelectorEvent = {
+			date: selectedDate,
+			canteenId: $selectedCanteen!
+		};
+		dispatch('selectChanged', payload);
+	}
+
+	onMount(async () => {
+		const res = await fetch('/api/mensa/canteens');
+
+		if (!res.ok) {
+			window.alert('Error fetching canteens');
+			return;
+		}
+
+		canteens = await res.json();
+		selectedCanteen = persistentStore('selectedCanteen', canteens[0].id);
+		selectedOpenMensaName = persistentStore('selectedOpenMensaName', '');
+
+		if ($selectedCanteen && $selectedCanteen < 0) {
+			canteens.push({ id: $selectedCanteen, name: $selectedOpenMensaName! });
+		}
+		canteens.push({
+			id: 0,
+			name: 'Andere Mensa...'
+		});
+
+		canteenSelectListValue = $selectedCanteen;
+	});
 
 	let selectedDate: SvelteDate = $state(getNextWeekday() as SvelteDate);
 
@@ -37,8 +58,6 @@
 
 	const dispatch = createEventDispatcher();
 	// const modalStore = getModalStore();
-	const isInsideDashboardModal = getContext('dashboardModal') ?? false;
-
 	// let openmensaModalComponent: ModalComponent;
 	// let openMensaModal: ModalSettings;
 
@@ -54,25 +73,18 @@
 	// 	component: openmensaModalComponent
 	// };
 
-	function canteens_populated(_element: HTMLSelectElement) {
-		// allegedly, svelte actions trigger once an element is created,
-		// but canteenSelectListValueDropdown is still undefined at this point sooo...
-		tick().then(() => {
-			canteenSelectListValue = $selectedCanteen;
-		});
-	}
-
 	function changeCanteen(canteenId: number | undefined) {
 		if (canteenId === 0) {
 			// sweet sentinel value which means "other mensa" was selected
 			canteenSelectListValue = $selectedCanteen;
-			// modalStore.close();
-			// start openmensa selection flow
-			// modalStore.trigger(openMensaModal);
+			openOpenMensaModal();
 		} else {
-			selectedCanteen.set(canteenId!);
-			dispatch('selectChanged');
+			selectedCanteen?.set(canteenId!);
 		}
+	}
+
+	function openOpenMensaModal() {
+		throw new Error('todo');
 	}
 
 	// function handleOpenMensaSelection(canteenId: number, canteenName: string) {
@@ -108,24 +120,34 @@
 			delta = day === 1 ? -3 : day === 0 ? -2 : -1;
 		}
 
-		selectedDate.setDate(selectedDate.getDate() + delta);
-		dispatch('selectChanged', selectedDate);
+		const nextDate = new SvelteDate(selectedDate);
+		nextDate.setDate(nextDate.getDate() + delta);
+		selectedDate = nextDate;
+		// notifyParent();
 	}
 </script>
 
 <svelte:window
 	on:keydown={(e) => {
-		if (isInsideDashboardModal) {
-			if (e.key == 'ArrowLeft') handleDaySelection(false);
-			else if (e.key == 'ArrowRight') handleDaySelection(true);
-		}
+		if (e.key == 'ArrowLeft') handleDaySelection(false);
+		else if (e.key == 'ArrowRight') handleDaySelection(true);
 	}}
 />
 
 <div class="flex w-full flex-row items-center justify-between">
 	<p class="font-bold">{getAltDayString(selectedDate)}</p>
 
-	<div class="join grid grid-cols-2 gap-0.5">
+	<div class="flex flex-row space-x-0.5">
+		<button
+			disabled={isSameDate(selectedDate, getNextWeekday())}
+			onclick={() => {
+				// let today = new SvelteDate();
+				// sonntag in deutschland ^= teil der vorh. Woche, in USA schon nächste woche, daher -1
+				selectedDate = getNextWeekday() as SvelteDate;
+			}}
+			class="btn mr-1 rounded-full btn-sm btn-accent">Heute</button
+		>
+
 		<button
 			class="btn join-item w-10 rounded-l-full btn-sm btn-accent"
 			onclick={() => {
@@ -141,34 +163,33 @@
 	</div>
 </div>
 
-<div class="mb-2 flex w-full items-center space-x-1">
-	<button
+<div class="my-2 flex w-full justify-end space-x-1 pr-1">
+	<!-- <button
 		aria-label="Vorheriger Tag"
 		onclick={() => handleDaySelection(false)}
 		class="btn btn-circle size-10 shrink-0 btn-accent"
 	>
 		<FontAwesomeIcon icon={faArrowLeft} />
-	</button>
+	</button> -->
 	{#key unique}
 		<select
 			aria-label="Mensa auswählen"
-			class="select transition-none"
+			class="select w-full transition-none"
 			bind:value={canteenSelectListValue}
 			onchange={() => {
 				changeCanteen(canteenSelectListValue);
 			}}
-			use:canteens_populated
 		>
 			{#each canteens as canteen (canteen.id)}
 				<option value={canteen.id}>{canteen.name}</option>
 			{/each}
 		</select>
 	{/key}
-	<button
+	<!-- <button
 		aria-label="Nächster Tag"
 		onclick={() => handleDaySelection(true)}
 		class="btn btn-circle size-10 shrink-0 btn-accent"
 	>
 		<FontAwesomeIcon icon={faArrowRight} />
-	</button>
+	</button> -->
 </div>

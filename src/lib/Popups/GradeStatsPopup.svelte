@@ -19,10 +19,6 @@
 		<span class="text-sm opacity-70">lade…</span>
 	</div>
 {:else}
-	<h4 class="text-center text-lg font-semibold">
-		{gradeStats.one + gradeStats.two + gradeStats.three + gradeStats.four + gradeStats.ronmodus} Ergebnisse
-	</h4>
-
 	<div class="mt-3 flex h-48 justify-evenly gap-8 rounded-box bg-base-200 px-8 pt-2">
 		<GradeStatColumn label={1} value={gradeStats.one} {maxValue} isMyGrade={myGrade == 1} />
 		<GradeStatColumn label={2} value={gradeStats.two} {maxValue} isMyGrade={myGrade == 2} />
