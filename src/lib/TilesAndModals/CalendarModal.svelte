@@ -109,5 +109,7 @@
 		</div>
 	</div>
 
-	<Calendar bind:this={ec} plugins={[TimeGrid]} {options} />
+	<div class="min-h-0 grow">
+		<Calendar bind:this={ec} plugins={[TimeGrid]} {options} />
+	</div>
 </DashboardModal>

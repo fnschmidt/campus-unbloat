@@ -21,11 +21,9 @@
 		try {
 			if (canteenId > 0) {
 				mealGroups = await fetchMeals(date, canteenId);
-				// modalComponent.props!.mealGroups = mealGroups;
 				return mealGroups;
 			} else {
 				mealGroups = await fetchOpenMeals(date, canteenId * -1);
-				// modalComponent.props!.mealGroups = mealGroups;
 				return mealGroups;
 			}
 		} catch (e) {
@@ -51,7 +49,9 @@
 </script>
 
 <DashboardModal bind:modal title="Mensa">
-	<MensaSelector on:selectChanged={handleSelectChange} />
+	<div class="sticky -top-4 z-10 -mx-2 -mt-4 bg-base-100 p-2 pt-4">
+		<MensaSelector on:selectChanged={handleSelectChange} />
+	</div>
 
 	{#if mealGroups}
 		<MealView {mealGroups} />

@@ -1,45 +1,33 @@
 <script lang="ts">
-	// import {
-	// 	Accordion,
-	// 	AccordionItem,
-	// 	getToastStore,
-	// 	popup,
-	// 	type PopupSettings
-	// } from '@skeletonlabs/skeleton';
 	import { untrack } from 'svelte';
 
 	import {
-		// getToastSettings,
-		// ToastPayloadClass,
 		type CampusDualGrade,
 		type CampusGradeMetadata,
 		type CampusGradeStats
 	} from '$lib/types';
-	// import DashboardModal from '$lib/DashboardModal.svelte';
+
 	import GradeStatsPopup from '$lib/Popups/GradeStatsPopup.svelte';
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-	import { faCalendar, faXmark } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCalendar,
+		faChartColumn,
+		faCoins,
+		faGraduationCap,
+		faXmark
+	} from '@fortawesome/free-solid-svg-icons';
 
 	let {
 		grades,
 		modal = $bindable<HTMLDialogElement | null>(null)
 	}: { grades: Array<CampusDualGrade>; modal: HTMLDialogElement | null } = $props();
 
-	// let modal: HTMLDialogElement | null = $state(null);
-
 	const totalCps = untrack(() => grades).reduce((sum, item) => sum + item.credit_points, 0);
 	const weightedAverage =
 		untrack(() => grades).reduce((sum, item) => {
 			return sum + parseFloat(item.grade.replace(',', '.')) * item.credit_points; // Convert string to number and add to sum
 		}, 0) / totalCps;
-	// const popupAvgInfo: PopupSettings = {
-	// 	event: 'hover',
-	// 	target: 'popupAvgInfo',
-	// 	placement: 'left'
-	// };
-
-	// const toastStore = getToastStore();
 
 	let filteredGrades: Array<CampusDualGrade> = $state(untrack(() => grades));
 
@@ -99,23 +87,6 @@
 
 		return Math.round(float);
 	}
-
-	// // separate popups to work around some bug in a dependency
-	// function getPopupGradeStats(qual: string): PopupSettings {
-	// 	const setting: PopupSettings = {
-	// 		state(event) {
-	// 			// dirty workaround for race condition
-	// 			setTimeout(() => {
-	// 				popupOpen = event.state;
-	// 			}, 100);
-	// 		},
-	// 		event: 'click',
-	// 		target: 'popupGradeStats-' + qual,
-	// 		placement: 'top'
-	// 	};
-
-	// 	return setting;
-	// }
 </script>
 
 <svelte:window
@@ -124,48 +95,26 @@
 	}}
 />
 
-<!-- <div class="card p-4 shadow-xl z-50" data-popup="popupAvgInfo">
-	<p class="font-bold">Gewichteter Durchschnitt</p>
-	<p class="text-center text-xs">∑(Note ⋅ ECTS) / Gesamt-ECTS</p>
-	<div class="arrow bg-surface-100-800-token" />
-</div> -->
-
-<!-- {#each grades as gr (gr)}
-	{#each gr.subgrades as sg (sg)}
-		<div
-			class="card p-2 w-80 shadow-2xl z-50"
-			data-popup="popupGradeStats-{sg.name + sg.bekanntgabe}"
-		>
-			<GradeStatsPopup bind:gradeStats bind:myGrade />
-		</div>
-	{/each}
-{/each} -->
-
-<!-- <button
-	aria-label="Anordnung ändern"
-	onclick={() => modal?.showModal()}
-	class="btn btn-circle btn-primary"
-	><Move size={18} />
-</button> -->
-
 <DashboardModal bind:modal title="Noten">
-	<div class="flex items-center gap-2">
-		<input
-			bind:this={filterElement}
-			bind:value={filter}
-			class="input-bordered input w-full"
-			type="text"
-			placeholder="Suchen..."
-		/>
-		<div
-			class="tooltip tooltip-left"
-			data-tip="Gewichteter Durchschnitt: ∑(Note ⋅ ECTS) / Gesamt-ECTS"
-		>
-			<div class="badge gap-2 badge-lg badge-primary">
-				<i class="fa-solid fa-graduation-cap pointer-events-none"></i>
-				<span class="pointer-events-none font-mono">
-					{totalCps ? weightedAverage.toPrecision(3) : '...'}
-				</span>
+	<div class="sticky -top-4 z-10 -mt-4 bg-base-100 pt-4 pb-2">
+		<div class="flex items-center gap-2">
+			<input
+				bind:this={filterElement}
+				bind:value={filter}
+				class="input-bordered input w-full"
+				type="text"
+				placeholder="Suchen..."
+			/>
+			<div class="tooltip tooltip-left">
+				<div class="tooltip-content max-w-[200px]">
+					Gewichteter Durchschnitt: ∑(Note ⋅ ECTS) / Gesamt-ECTS
+				</div>
+				<div class="badge h-10 p-2 badge-primary">
+					<FontAwesomeIcon icon={faGraduationCap} />
+					<span class="font-mono">
+						{totalCps ? weightedAverage.toPrecision(3) : '...'}
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -184,7 +133,8 @@
 
 					<div class="collapse-title flex items-center gap-3">
 						<span
-							class="badge flex-none badge-lg {grade.total_passed === undefined
+							class="badge flex-none p-2 font-mono badge-md font-bold {grade.total_passed ===
+							undefined
 								? 'badge-neutral'
 								: grade.total_passed
 									? 'badge-success'
@@ -197,10 +147,8 @@
 						<div class="card bg-base-100 shadow">
 							<div class="card-body gap-4 p-4">
 								<div class="flex items-center gap-3">
-									<span class="badge badge-outline">
-										<!-- <i class="fa-solid fa-calendar"></i> -->
+									<span class="badge size-7 badge-primary">
 										<FontAwesomeIcon icon={faCalendar} />
-										<!-- <Calendar fill="white"></Calendar> -->
 									</span>
 									<div>
 										<div class="font-bold">{grade.akad_period}</div>
@@ -209,8 +157,8 @@
 								</div>
 
 								<div class="flex items-center gap-3">
-									<span class="badge badge-outline">
-										<i class="fa-solid fa-coins"></i>
+									<span class="badge size-7 badge-primary">
+										<FontAwesomeIcon icon={faCoins} />
 									</span>
 									<div>
 										<div class="font-bold">{grade.credit_points}</div>
@@ -225,7 +173,8 @@
 								{#each grade.subgrades as subgrade (subgrade)}
 									<div class="flex items-center gap-3">
 										<span
-											class="badge flex-none badge-lg {subgrade.passed === undefined
+											class="badge flex-none p-2 font-mono badge-md font-bold {subgrade.passed ===
+											undefined
 												? 'badge-neutral'
 												: subgrade.passed
 													? 'badge-success'
@@ -250,7 +199,7 @@
 												}}
 												class="btn btn-square shrink-0 btn-sm btn-primary"
 											>
-												<i class="fa-solid fa-chart-column"></i>
+												<FontAwesomeIcon icon={faChartColumn} />
 											</button>
 										{/if}
 									</div>

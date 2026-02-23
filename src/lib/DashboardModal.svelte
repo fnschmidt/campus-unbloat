@@ -27,9 +27,9 @@
 		<div class="modalBody min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable_both-edges]">
 			<!-- Spacer gleicht die überlappende Header-Höhe aus -->
 			<div class="h-16 shrink-0"></div>
-			<!-- Unterer Padding-Offset, damit die feste Bottom-Navigation des Carousels keine Inhalte überdeckt.
-				Berücksichtigt auch den Safe-Area-Inset unten. Die Extrahöhe (5rem) ist hardcoded, da Carousel-Nav nicht im gleichen Layout ist -->
-			<div class="h-[calc(100%-64px)] p-4 pb-[calc(env(safe-area-inset-bottom,0px)+1rem)]">
+			<div
+				class="flex h-[calc(100%-64px)] flex-col overflow-y-auto p-4 pb-[calc(env(safe-area-inset-bottom,0px)+1rem)]"
+			>
 				{@render children()}
 			</div>
 		</div>
