@@ -25,11 +25,10 @@
 	import PageContainer from '$lib/PageContainer.svelte';
 	import BasicInfoTile from '$lib/TilesAndModals/BasicInfoTile.svelte';
 	import CalendarTile from '$lib/TilesAndModals/CalendarTile.svelte';
-	// import ExamSignupTile from '$lib/TilesAndModals/ExamSignupTile.svelte';
+	import ExamSignupTile from '$lib/TilesAndModals/ExamSignupTile.svelte';
 	import GradesTile from '$lib/TilesAndModals/GradesTile.svelte';
 	import MensaTile from '$lib/TilesAndModals/MensaTile.svelte';
 	import BlockplanTile from '$lib/TilesAndModals/BlockplanTile.svelte';
-	// import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 	import { every as _every, some as _some, isEqual as _isEqual } from 'lodash-es';
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 	import NotificationDrawer from '$lib/components/page/NotificationDrawer.svelte';
@@ -38,16 +37,13 @@
 
 	export let data;
 
-	// const toastStore = getToastStore();
-	// const drawerStore = getDrawerStore();
-
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const componentMap: Record<string, Component<any, any, any>> = {
 		BasicInfoTile,
 		GradesTile,
 		CalendarTile,
 		MensaTile,
-		// ExamSignupTile,
+		ExamSignupTile,
 		BlockplanTile
 	};
 
@@ -73,9 +69,6 @@
 		// toastStore.trigger(toastSettings);
 	}
 
-	// let modalStore = getModalStore();
-	// let modalComponent: ModalComponent;
-	// let modal: ModalSettings;
 	let readRemindersStore: Writable<CdReminders>;
 
 	onMount(async () => {
@@ -84,16 +77,6 @@
 			console.error('Component order is fucked, resetting');
 			componentOrder.set(components);
 		}
-
-		// modalComponent = {
-		// 	ref: DashReorderModal,
-		// 	props: { componentOrder: componentOrder }
-		// };
-
-		// modal = {
-		// 	type: 'component',
-		// 	component: modalComponent
-		// };
 
 		componentProps = {
 			BasicInfoTile: { basicUserData }
@@ -116,8 +99,6 @@
 			};
 
 			showToast(payload);
-			// const toastSettings = getToastSettings(payload);
-			// toastStore.trigger(toastSettings);
 		} else {
 			reminders = await res.json();
 			presentReminderCategories = getUnreadReminderCategories(reminders!);
@@ -172,19 +153,9 @@
 <PageContainer>
 	{#if basicUserData}
 		<div class="mx-auto flex w-[98%] items-center space-x-1 sm:w-96 lg:w-[48.6rem]">
-			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<h1 class="grow text-3xl font-bold" onclick={() => {}}>
+			<h1 class="grow text-3xl font-bold">
 				Hallo, {basicUserData.first_name}.
 			</h1>
-
-			<!-- <button
-				aria-label="Anordnung ändern"
-				on:click={openTileReorder}
-				class="btn btn-circle btn-primary"
-			>
-				<Move size={18} />
-			</button> -->
 
 			<DashReorderModal {componentOrder} />
 
