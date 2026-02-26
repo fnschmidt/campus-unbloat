@@ -119,7 +119,7 @@
 						<div class="card-body gap-3 p-4">
 							{#if option.exam_date}
 								<div class="flex items-center gap-3">
-									<span class="badge size-7 badge-primary">
+									<span class="badge size-7 badge-soft badge-primary">
 										<FontAwesomeIcon icon={faCalendar} />
 									</span>
 									<div>
@@ -133,7 +133,7 @@
 
 							{#if option.exam_time}
 								<div class="flex items-center gap-3">
-									<span class="badge size-7 badge-primary">
+									<span class="badge size-7 badge-soft badge-primary">
 										<FontAwesomeIcon icon={faClock} />
 									</span>
 									<div>
@@ -145,7 +145,7 @@
 
 							{#if option.exam_room}
 								<div class="flex items-center gap-3">
-									<span class="badge size-7 badge-primary">
+									<span class="badge size-7 badge-soft badge-primary">
 										<FontAwesomeIcon icon={faLocationDot} />
 									</span>
 									<div class="font-bold">{option.exam_room}</div>
@@ -158,7 +158,7 @@
 						<div class="card-body gap-3 p-4">
 							{#if option.signup_information}
 								<div class="flex items-center gap-3">
-									<span class="badge size-7 badge-primary">
+									<span class="badge size-7 badge-soft badge-primary">
 										<FontAwesomeIcon icon={faCircleInfo} />
 									</span>
 									<div class="font-bold">{option.signup_information}</div>
@@ -167,7 +167,7 @@
 
 							{#if option.warning_message}
 								<div class="flex items-center gap-3">
-									<span class="badge size-7 badge-primary">
+									<span class="badge size-7 badge-soft badge-primary">
 										<FontAwesomeIcon icon={faInfoCircle} />
 									</span>
 									<div class="font-bold">{option.warning_message}</div>

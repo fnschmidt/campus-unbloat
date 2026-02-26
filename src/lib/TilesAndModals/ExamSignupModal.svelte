@@ -13,7 +13,13 @@
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import ExamSignupAccordion from '$lib/ExamSignup/ExamSignupAccordion.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-	import { faXmark } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCalendar,
+		faCircleInfo,
+		faRecycle,
+		faUserTie,
+		faXmark
+	} from '@fortawesome/free-solid-svg-icons';
 
 	let {
 		modal = $bindable<HTMLDialogElement | null>(null),
@@ -141,14 +147,70 @@
 <dialog class="modal" bind:this={examDetailsModal}>
 	<div class="modal-box max-w-2xl">
 		{#if examDetails}
-			<form method="dialog" class="flex items-center justify-between">
-				<h4 class="text-center text-lg font-semibold">jimbob</h4>
+			<form method="dialog" class="mb-3 flex items-center justify-between">
+				<h4 class="text-center text-lg font-semibold">{examDetails.ev_stext}</h4>
 				<button class="btn btn-circle"><FontAwesomeIcon icon={faXmark} /></button>
 			</form>
 
-			<!-- hier content -->
+			<div class="card-body flex flex-col gap-3 p-0">
+				{#if examDetails.ev_examorg_longtext || examDetails.ev_examorg_text}
+					<div class="flex items-center gap-3">
+						<span class="badge size-7 badge-soft badge-primary">
+							<FontAwesomeIcon icon={faCircleInfo} />
+						</span>
+						<div>
+							<div class="font-bold">
+								{examDetails.ev_examorg_longtext
+									? examDetails.ev_examorg_longtext
+									: examDetails.ev_examorg_text}
+							</div>
+							<div class="text-sm opacity-60">Prüfungsart</div>
+						</div>
+					</div>
+				{/if}
+				{#if examDetails.ev_reason}
+					<div class="flex items-center gap-3">
+						<span class="badge size-7 badge-soft badge-primary">
+							<FontAwesomeIcon icon={faRecycle} />
+						</span>
+						<div>
+							<div class="font-bold">{examDetails.ev_reason}</div>
+							<div class="text-sm opacity-60">Versuch</div>
+						</div>
+					</div>
+				{/if}
+				{#if examDetails.ev_examdate}
+					<div class="flex items-center gap-3">
+						<span class="badge size-7 badge-soft badge-primary">
+							<FontAwesomeIcon icon={faCalendar} />
+						</span>
+						<div>
+							<div class="font-bold">
+								{examDetails.ev_examdate.split('-').reverse().join('.')} ({examDetails.ev_exambegtime.slice(
+									0,
+									5
+								)}-{examDetails.ev_examendtime.slice(0, 5)})
+							</div>
+							<div class="text-sm opacity-60">Prüfungstermin</div>
+						</div>
+					</div>
+				{/if}
+				{#if examDetails.ev_instructor}
+					<div class="flex items-center gap-3">
+						<span class="badge size-7 badge-soft badge-primary">
+							<FontAwesomeIcon icon={faUserTie} />
+						</span>
+						<div>
+							<div class="font-bold">{examDetails.ev_instructor}</div>
+							<div class="text-sm opacity-60">Prüfer*in</div>
+						</div>
+					</div>
+				{/if}
+			</div>
 		{:else}
-			<span class="loading loading-xl loading-dots"></span>
+			<div class="flex h-48 items-center justify-center">
+				<span class="loading loading-xl loading-dots"></span>
+			</div>
 		{/if}
 	</div>
 	<form method="dialog" class="modal-backdrop"><button>close</button></form>
