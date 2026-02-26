@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import { ProgressBar } from '@skeletonlabs/skeleton';
 	import { onMount, createEventDispatcher } from 'svelte';
 
 	import DashboardTile from '$lib/DashboardTile.svelte';

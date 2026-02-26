@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	// import { ProgressRadial } from '@skeletonlabs/skeleton';
 
 	import TileInteractiveElementWrapper from './TilesAndModals/TileInteractiveElementWrapper.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
@@ -67,29 +66,19 @@
 >
 	<div class="flex w-full flex-row items-center justify-between">
 		{#if clickable}
-			<!-- <Maximize2 size={20} strokeWidth={3} /> -->
 			<FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} />
-			<!-- <i class="{ready ? '' : 'opacity-40'} fa-solid fa-up-right-and-down-left-from-center w-4"></i> -->
 		{/if}
 		<header class="w-full grow text-center text-xl font-bold">{title}</header>
 		{#if reloadable}
 			<TileInteractiveElementWrapper>
 				{#if reloading}
-					<span class="loading -mt-0.5 -mr-0.5 mb-0.5 ml-0.5 loading-sm loading-spinner"></span>
-					<!-- <ProgressRadial
-						width="w-4 scale-125"
-						stroke={80}
-						value={undefined}
-						strokeLinecap="round"
-						track="stroke-surface-500/30 dark:stroke-surface-300/30"
-					/> -->
+					<span class="loading -mt-0.5 -mr-0.5 mb-0.5 ml-0.5 loading-sm loading-dots"></span>
 				{:else}
 					<button
 						on:click={() => dispatch('reload')}
 						class="group hover:cursor-pointer"
 						aria-label="Daten neu laden"
 					>
-						<!-- <span clas -->
 						<span class="block group-hover:hidden">
 							<FontAwesomeIcon icon={faCheck} class="block group-hover:hidden" />
 						</span>
@@ -97,20 +86,6 @@
 							<FontAwesomeIcon icon={faRotateRight} class="hidden group-hover:block" />
 						</span>
 					</button>
-					<!-- <button
-						id="calendarReloadButton"
-						aria-label="Daten neu laden"
-						class="btn-icon fa-solid fa-check size-4 shrink-0 scale-110"
-						on:click={() => dispatch('reload')}
-						on:mouseenter={() => {
-							document.getElementById('calendarReloadButton')?.classList.remove('fa-check');
-							document.getElementById('calendarReloadButton')?.classList.add('fa-rotate-right');
-						}}
-						on:mouseleave={() => {
-							document.getElementById('calendarReloadButton')?.classList.add('fa-check');
-							document.getElementById('calendarReloadButton')?.classList.remove('fa-rotate-right');
-						}}
-					></button> -->
 				{/if}
 			</TileInteractiveElementWrapper>
 		{:else if clickable}
@@ -125,14 +100,7 @@
 		{#if ready}
 			<slot />
 		{:else}
-			lade
-			<!-- <ProgressRadial
-				width="w-20"
-				stroke={80}
-				value={undefined}
-				strokeLinecap="round"
-				track="stroke-surface-500/30 dark:stroke-surface-300/30"
-			/> -->
+			<span class="loading h-42 loading-xl loading-dots"></span>
 		{/if}
 	</div>
 

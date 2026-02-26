@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	import type { Writable } from 'svelte/store';

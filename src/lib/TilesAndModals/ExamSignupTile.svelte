@@ -33,7 +33,7 @@
 
 <ExamSignupModal bind:modal {signupOptions} onExamSignupOrCancel={fetchStuff}></ExamSignupModal>
 
-<DashboardTile title="Prüfungen" on:click={() => modal?.showModal()} ready={Boolean(modal)}>
+<DashboardTile title="Prüfungen" on:click={() => modal?.showModal()} ready={signupOptions !== null}>
 	<div class="flex items-center">
 		{#if signUppable != null}
 			<div class="flex flex-col">

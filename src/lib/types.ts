@@ -1,5 +1,3 @@
-// import type { ToastSettings } from '@skeletonlabs/skeleton';
-
 import type { SvelteDate } from 'svelte/reactivity';
 
 export type ToastPayload = {

@@ -1,6 +1,4 @@
 <script lang="ts">
-	// import { ProgressRadial } from '@skeletonlabs/skeleton';
-
 	import type { CampusGradeStats } from '$lib/types';
 	import GradeStatColumn from './GradeStatColumn.svelte';
 
@@ -15,8 +13,7 @@
 
 {#if !(gradeStats && maxValue)}
 	<div class="flex h-56 flex-col items-center justify-center gap-3">
-		<span class="loading loading-lg loading-spinner"></span>
-		<span class="text-sm opacity-70">lade…</span>
+		<span class="loading loading-xl loading-dots"></span>
 	</div>
 {:else}
 	<div class="mt-3 flex h-48 justify-evenly gap-8 rounded-box bg-base-200 px-8 pt-2">

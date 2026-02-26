@@ -1,13 +1,4 @@
 <script lang="ts">
-	// import {
-	// 	getModalStore,
-	// 	getToastStore,
-	// 	getDrawerStore,
-	// 	ProgressRadial,
-	// 	type DrawerSettings,
-	// 	type ModalComponent,
-	// 	type ModalSettings
-	// } from '@skeletonlabs/skeleton';
 	import { onMount, type Component } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import Portal from 'svelte-portal';

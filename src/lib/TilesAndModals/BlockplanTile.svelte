@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { onMount, createEventDispatcher } from 'svelte';
 
 	import { ToastPayloadClass, type Timeline, type ToastPayload } from '$lib/types';
