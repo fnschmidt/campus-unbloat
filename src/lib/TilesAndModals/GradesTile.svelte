@@ -20,10 +20,6 @@
 
 	let modal: HTMLDialogElement | null = null;
 
-	// let modalStore = getModalStore();
-	// let modalComponent: ModalComponent;
-	// let modal: ModalSettings;
-
 	let stats: ExamStats;
 	let grades: Array<CampusDualGrade>;
 	let gradesCountStore: Writable<number>;
@@ -59,29 +55,20 @@
 
 			dispatch('showToast', payload);
 		}
-
-		// modalComponent = {
-		// 	ref: GradesModal,
-		// 	props: { grades: grades }
-		// };
-
-		// modal = {
-		// 	type: 'component',
-		// 	component: modalComponent
-		// };
 	});
 
-	// function openModal() {
-	// 	gradesCountStore.set(grades.length);
-	// 	modalStore.trigger(modal);
-	// }
+	function openModal() {
+		if (!modal) return;
+		gradesCountStore.set(grades.length);
+		modal.showModal();
+	}
 </script>
 
 {#if grades !== undefined}
 	<GradesModal bind:modal {grades}></GradesModal>
 {/if}
 
-<DashboardTile title="Noten" on:click={() => modal?.showModal()} ready={Boolean(stats && grades)}>
+<DashboardTile title="Noten" on:click={openModal} ready={Boolean(stats && grades)}>
 	{#if $gradesCountStore != grades.length}
 		<div class="flex w-full justify-end">
 			<span class="relative -top-8 left-2 -mb-6 badge rounded-full badge-primary">Neue Noten</span>
