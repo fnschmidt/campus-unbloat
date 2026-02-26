@@ -23,14 +23,14 @@
 			</div>
 			<div
 				tabindex="-1"
-				class="dropdown-content card z-1 w-48 rounded-3xl bg-primary/20 shadow-md backdrop-blur-2xl card-sm"
+				class="dropdown-content card z-1 w-48 rounded-3xl bg-base-100 shadow-2xl card-sm"
 			>
 				<div class="card-body p-3">
 					<a
 						href="https://github.com/fnschmidt/campus-unbloat"
 						target="_blank"
 						aria-label="Quellcode (GitHub)"
-						class="btn rounded-full btn-outline btn-primary"
+						class="btn rounded-2xl btn-soft btn-primary"
 					>
 						<!-- <Github size={18} /> -->
 						<FontAwesomeIcon icon={faGithub} />
@@ -39,7 +39,7 @@
 					<a
 						href="https://github.com/fnschmidt/campus-unbloat/issues/new?assignees=fnschmidt&labels=triage&title=[Feature]:%20/[Bug]:%20...&body=Describe%20a%20bug%20you%20encountered,%20or%20a%20feature%20that%20you%20think%20is%20missing."
 						target="_blank"
-						class="btn rounded-full btn-outline btn-primary"
+						class="btn rounded-2xl btn-soft btn-primary"
 						><FontAwesomeIcon icon={faBug} /> Fehler melden</a
 					>
 				</div>
@@ -53,13 +53,13 @@
 				</div>
 				<div
 					tabindex="-1"
-					class="dropdown-content card z-1 w-44 rounded-3xl bg-primary/20 shadow-md backdrop-blur-2xl card-sm"
+					class="dropdown-content card z-1 w-44 rounded-3xl bg-base-100 shadow-2xl card-sm"
 				>
 					<div class="card-body p-3">
-						<a href={resolve('/impressum')} class="btn rounded-full btn-outline btn-primary"
+						<a href={resolve('/impressum')} class="btn rounded-2xl btn-soft btn-primary"
 							>Impressum</a
 						>
-						<a href={resolve('/datenschutz')} class="btn rounded-full btn-outline btn-primary"
+						<a href={resolve('/datenschutz')} class="btn rounded-2xl btn-soft btn-primary"
 							>Datenschutz</a
 						>
 					</div>

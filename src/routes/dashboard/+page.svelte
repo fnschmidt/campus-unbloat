@@ -152,7 +152,7 @@
 
 <PageContainer>
 	{#if basicUserData}
-		<div class="mx-auto flex w-[98%] items-center space-x-1 sm:w-96 lg:w-[48.6rem]">
+		<div class="mx-auto flex w-[94%] items-center space-x-1 sm:w-96 lg:w-[48.6rem]">
 			<h1 class="grow text-3xl font-bold">
 				Hallo, {basicUserData.first_name}.
 			</h1>

@@ -37,10 +37,10 @@
 		Es gibt keine Einträge.
 	{/if}
 	{#each sections as section (section.key)}
-		<div class="collapse-arrow collapse border border-base-300 bg-base-100">
+		<div class="collapse-arrow collapse">
 			<input type="checkbox" />
-			<div class="collapse-title font-semibold">{section.title}</div>
-			<div class="collapse-content text-sm">
+			<div class="collapse-title pb-2 text-left font-semibold">{section.title}</div>
+			<div class="collapse-content space-y-2 pb-0">
 				<ul class="ml-4 list-disc text-left">
 					{#each timeline[section.key] as event (event.description)}
 						<li class="text-xs select-all">{event.description}</li>
@@ -49,20 +49,4 @@
 			</div>
 		</div>
 	{/each}
-	<!-- <Accordion>
-		{#each sections as section (section.key)}
-			{#if timeline[section.key].length > 0}
-				<AccordionItem>
-					<svelte:fragment slot="summary">{section.title}</svelte:fragment>
-					<svelte:fragment slot="content">
-						<ul class="list-disc text-left ml-4">
-							{#each timeline[section.key] as event}
-								<li class="text-xs select-all">{event.description}</li>
-							{/each}
-						</ul>
-					</svelte:fragment>
-				</AccordionItem>
-			{/if}
-		{/each}
-	</Accordion> -->
 </DashboardTile>

@@ -41,12 +41,13 @@
 	<dialog class="modal" bind:this={modal}>
 		<div class="modal-box">
 			<!--Knopf zum schließen des Modals-->
-			<form method="dialog">
+			<form method="dialog" class="flex items-center justify-between">
+				<h4 class="text-center text-lg font-semibold">Anordnung ändern</h4>
 				<button class="btn btn-circle"><FontAwesomeIcon icon={faXmark} /></button>
 			</form>
 
 			<div
-				class="grid grid-cols-1 gap-2 lg:grid-cols-2"
+				class="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2"
 				use:dndzone={{ items, dropTargetStyle: {}, flipDurationMs: 200 }}
 				onconsider={handleSort}
 				onfinalize={finalize}
@@ -54,7 +55,7 @@
 				{#each items as item (item.id)}
 					<div
 						animate:flip={{ duration: 200 }}
-						class="rounded-token flex items-center bg-[#ddb8c1] px-4 py-2 dark:bg-[#3b1725]"
+						class="flex items-center rounded-2xl bg-primary/20 px-4 py-2"
 					>
 						<p class="grow">{item.title}</p>
 						<FontAwesomeIcon icon={faBars} />
