@@ -17,17 +17,20 @@
 		ToastPayloadClass,
 		type CampusDualSignupOption,
 		type CampusDualVerfahrenOption,
+		type CampusExamMetadata,
 		type ToastPayload
 	} from '$lib/types';
 
 	let {
 		data,
 		signupOrVerfahren,
-		onExamSignupOrCancel = () => {}
+		onExamSignupOrCancel = () => {},
+		onGetExamInfo = () => {}
 	}: {
 		data?: Array<CampusDualSignupOption | CampusDualVerfahrenOption>;
 		signupOrVerfahren: SignupOrVerfahren;
 		onExamSignupOrCancel?: () => void;
+		onGetExamInfo?: (internal_metadata: CampusExamMetadata) => void;
 	} = $props();
 
 	const dispatch = createEventDispatcher();
@@ -175,7 +178,10 @@
 
 					{#if option.internal_metadata}
 						<div class="flex justify-center gap-2">
-							<button class="btn btn-square btn-primary">
+							<button
+								onclick={() => onGetExamInfo(option.internal_metadata!)}
+								class="btn btn-square btn-primary"
+							>
 								<FontAwesomeIcon icon={faInfoCircle} />
 							</button>
 							<button
