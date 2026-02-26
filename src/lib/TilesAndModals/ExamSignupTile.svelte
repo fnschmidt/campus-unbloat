@@ -8,6 +8,7 @@
 
 	let { onExamSignupOrCancel = () => {} }: { onExamSignupOrCancel?: () => void } = $props();
 
+	let examSignupModal: ExamSignupModal | null = $state(null);
 	let modal: HTMLDialogElement | null = $state(null);
 
 	let signupOptions: Array<CampusDualSignupOption> | null = $state(null);
@@ -34,12 +35,17 @@
 </script>
 
 <ExamSignupModal
+	bind:this={examSignupModal}
 	bind:modal
 	{signupOptions}
 	onExamSignupOrCancel={() => (onExamSignupOrCancel(), fetchStuff())}
 ></ExamSignupModal>
 
-<DashboardTile title="Prüfungen" on:click={() => modal?.showModal()} ready={signupOptions !== null}>
+<DashboardTile
+	title="Prüfungen"
+	on:click={() => (examSignupModal?.loadVerfahrenOptions(), modal?.showModal())}
+	ready={signupOptions !== null}
+>
 	<div class="flex items-center py-4">
 		{#if signUppable != null}
 			<div class="flex flex-col">

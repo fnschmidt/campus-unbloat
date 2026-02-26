@@ -39,7 +39,9 @@
 	let verfahrenOptions: Array<CampusDualVerfahrenOption> | null = $state(null);
 	let signupOrVerfahren = $state(SignupOrVerfahren.signup);
 
-	async function loadVerfahrenOptions() {
+	export async function loadVerfahrenOptions() {
+		verfahrenOptions = null;
+
 		const res = await fetch('/api/examverfahren');
 		if (!res.ok) {
 			const error = await res.text();
@@ -53,24 +55,6 @@
 
 		verfahrenOptions = await res.json();
 	}
-
-	$effect(() => {
-		if (!modal) {
-			return;
-		}
-
-		const handleToggle = () => {
-			if (modal?.open) {
-				loadVerfahrenOptions();
-			}
-		};
-
-		modal.addEventListener('toggle', handleToggle);
-
-		return () => {
-			modal?.removeEventListener('toggle', handleToggle);
-		};
-	});
 
 	async function showexamDetailsModal(internal_metadata: CampusExamMetadata) {
 		getExamDetails(internal_metadata);
@@ -140,7 +124,9 @@
 			onGetExamInfo={showexamDetailsModal}
 		/>
 	{:else}
-		<div>Lädt...</div>
+		<div class="flex h-56 flex-col items-center justify-center">
+			<span class="loading loading-xl loading-dots"></span>
+		</div>
 	{/if}
 </DashboardModal>
 
