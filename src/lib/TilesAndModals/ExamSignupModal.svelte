@@ -43,25 +43,27 @@
 </script>
 
 <DashboardModal bind:modal title="Prüfungen">
-	<div role="tablist" class="tabs-box tabs">
-		<button
-			role="tab"
-			class="tab {signupOrVerfahren === SignupOrVerfahren.signup ? 'tab-active' : ''}"
-			onclick={() => {
-				signupOrVerfahren = SignupOrVerfahren.signup;
-			}}
-		>
-			Anmeldung
-		</button>
-		<button
-			role="tab"
-			class="tab {signupOrVerfahren === SignupOrVerfahren.verfahren ? 'tab-active' : ''}"
-			onclick={() => {
-				signupOrVerfahren = SignupOrVerfahren.verfahren;
-			}}
-		>
-			Abmeldung
-		</button>
+	<div class="flex justify-center">
+		<div role="tablist" class="tabs-box tabs">
+			<button
+				role="tab"
+				class="tab {signupOrVerfahren === SignupOrVerfahren.signup ? 'tab-active' : ''}"
+				onclick={() => {
+					signupOrVerfahren = SignupOrVerfahren.signup;
+				}}
+			>
+				Anmeldung
+			</button>
+			<button
+				role="tab"
+				class="tab {signupOrVerfahren === SignupOrVerfahren.verfahren ? 'tab-active' : ''}"
+				onclick={() => {
+					signupOrVerfahren = SignupOrVerfahren.verfahren;
+				}}
+			>
+				Abmeldung
+			</button>
+		</div>
 	</div>
 
 	{#if signupOrVerfahren === SignupOrVerfahren.signup && signupOptions}
