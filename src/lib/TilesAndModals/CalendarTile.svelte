@@ -61,7 +61,7 @@
 
 	let options = {
 		view: 'listDay',
-		events: unixEventsToEvents($storedEventsUnix ?? []),
+		events: [],
 		height: '100%',
 		width: '100%',
 		hiddenDays: hiddenDays,
@@ -78,6 +78,10 @@
 			return `${info.timeText}\n${info.event.title}${info.event.extendedProps.sroom ? `, Raum ${info.event.extendedProps.sroom}` : ''}`;
 		}
 	};
+
+	$effect(() => {
+		if ($storedEventsUnix && ec) ec.setOption('events', unixEventsToEvents($storedEventsUnix));
+	});
 
 	onMount(async () => {
 		storedEventsUnix = persistentStore('storedEvents', []);
@@ -145,7 +149,7 @@
 		storedEventsUnix!.set(parsedUnix);
 		ec!.setOption('events', unixEventsToEvents(parsedUnix));
 
-		if (options.events.length > 0) {
+		if (parsedUnix.length > 0) {
 			lastEventUpdate.set(new Date());
 		}
 
