@@ -51,7 +51,7 @@
 	};
 </script>
 
-<dialog bind:this={modal} class="modal">
+<dialog bind:this={modal} class="modal select-none">
 	<div class="modal-box">
 		<form method="dialog">
 			<button class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm">✕</button>

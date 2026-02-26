@@ -38,7 +38,7 @@
 
 {#if items}
 	<!--Dialog Element um Modal zu definieren-->
-	<dialog class="modal" bind:this={modal}>
+	<dialog class="modal select-none" bind:this={modal}>
 		<div class="modal-box">
 			<!--Knopf zum schließen des Modals-->
 			<form method="dialog" class="flex items-center justify-between">

@@ -217,7 +217,7 @@
 	{/if}
 </DashboardModal>
 
-<dialog class="modal" bind:this={gradeStatsModal}>
+<dialog class="modal select-none" bind:this={gradeStatsModal}>
 	<div class="modal-box max-w-2xl">
 		<form method="dialog" class="flex items-center justify-between">
 			{#if gradeStats}

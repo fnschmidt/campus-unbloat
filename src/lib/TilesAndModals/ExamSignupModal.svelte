@@ -144,7 +144,7 @@
 	{/if}
 </DashboardModal>
 
-<dialog class="modal" bind:this={examDetailsModal}>
+<dialog class="modal select-none" bind:this={examDetailsModal}>
 	<div class="modal-box max-w-2xl">
 		{#if examDetails}
 			<form method="dialog" class="mb-3 flex items-center justify-between">
