@@ -70,13 +70,15 @@
 		}
 
 		componentProps = {
-			BasicInfoTile: { basicUserData }
+			BasicInfoTile: { basicUserData },
+			ExamSignupTile: { onExamSignupOrCancel: fetchReminders }
 		};
 
 		fetchReminders();
 	});
 
 	async function fetchReminders() {
+		console.warn('fetchrem');
 		reminders = null;
 		presentReminderCategories = 0;
 

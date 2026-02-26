@@ -6,6 +6,8 @@
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faSquareCheck, faSquarePen } from '@fortawesome/free-solid-svg-icons';
 
+	let { onExamSignupOrCancel = () => {} }: { onExamSignupOrCancel?: () => void } = $props();
+
 	let modal: HTMLDialogElement | null = $state(null);
 
 	let signupOptions: Array<CampusDualSignupOption> | null = $state(null);
@@ -31,7 +33,11 @@
 	}
 </script>
 
-<ExamSignupModal bind:modal {signupOptions} onExamSignupOrCancel={fetchStuff}></ExamSignupModal>
+<ExamSignupModal
+	bind:modal
+	{signupOptions}
+	onExamSignupOrCancel={() => (onExamSignupOrCancel(), fetchStuff())}
+></ExamSignupModal>
 
 <DashboardTile title="Prüfungen" on:click={() => modal?.showModal()} ready={signupOptions !== null}>
 	<div class="flex items-center">

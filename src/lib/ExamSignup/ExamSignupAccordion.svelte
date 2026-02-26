@@ -21,7 +21,7 @@
 	} from '$lib/types';
 
 	let {
-		data = [],
+		data,
 		signupOrVerfahren,
 		onExamSignupOrCancel = () => {}
 	}: {
@@ -53,6 +53,8 @@
 	}
 
 	async function startExamSignup(internal_metadata?: CampusDualSignupOption['internal_metadata']) {
+		data = undefined;
+
 		const url =
 			signupOrVerfahren === SignupOrVerfahren.signup ? '/api/registerexam' : '/api/cancelexam';
 
@@ -94,7 +96,7 @@
 	}
 </script>
 
-{#if data.length > 0}
+{#if data !== undefined}
 	<div class="space-y-2">
 		{#each data as option (option)}
 			{@const statusMeta = getStatusMeta(option.status)}
@@ -191,5 +193,7 @@
 		{/each}
 	</div>
 {:else}
-	<div>Keine Prüfungen gefunden.</div>
+	<div class="flex h-56 flex-col items-center justify-center">
+		<span class="loading loading-xl loading-dots"></span>
+	</div>
 {/if}
