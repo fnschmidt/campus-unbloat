@@ -109,7 +109,7 @@
 	{#if mealGroups.length === 0}
 		<p class="pt-2 text-center">Keine Gerichte verfügbar.</p>
 	{:else if matches && mealGroups.length > 1}
-		<div class="grid min-h-0 grow grid-cols-2 gap-3 px-1">
+		<div class="grid grow grid-cols-2 gap-3 px-1">
 			<div class="flex flex-col space-y-2">
 				{#each column1 as mealGroup (mealGroup)}
 					<MealGroupContainer {mealGroup} />
@@ -122,7 +122,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="flex min-h-0 grow flex-col space-y-2 px-1">
+		<div class="flex grow flex-col space-y-2 px-1">
 			{#each mealGroups as mealGroup (mealGroup)}
 				<MealGroupContainer {mealGroup} />
 			{/each}

@@ -40,7 +40,7 @@
 ></ExamSignupModal>
 
 <DashboardTile title="Prüfungen" on:click={() => modal?.showModal()} ready={signupOptions !== null}>
-	<div class="flex items-center">
+	<div class="flex items-center py-4">
 		{#if signUppable != null}
 			<div class="flex flex-col">
 				{#if signUppable === 0}

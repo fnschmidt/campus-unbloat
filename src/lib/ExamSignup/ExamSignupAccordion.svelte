@@ -179,7 +179,9 @@
 								<FontAwesomeIcon icon={faInfoCircle} />
 							</button>
 							<button
-								class="btn btn-accent"
+								class="btn {signupOrVerfahren === SignupOrVerfahren.signup
+									? 'btn-success'
+									: 'btn-error'}"
 								onclick={() => startExamSignup(option.internal_metadata)}
 							>
 								{signupOrVerfahren === SignupOrVerfahren.signup

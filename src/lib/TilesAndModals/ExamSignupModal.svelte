@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	import {
 		SignupOrVerfahren,
@@ -26,7 +26,7 @@
 	let verfahrenOptions: Array<CampusDualVerfahrenOption> | null = $state(null);
 	let signupOrVerfahren = $state(SignupOrVerfahren.signup);
 
-	onMount(async () => {
+	async function loadVerfahrenOptions() {
 		const res = await fetch('/api/examverfahren');
 		if (!res.ok) {
 			const error = await res.text();
@@ -39,6 +39,24 @@
 		}
 
 		verfahrenOptions = await res.json();
+	}
+
+	$effect(() => {
+		if (!modal) {
+			return;
+		}
+
+		const handleToggle = () => {
+			if (modal?.open) {
+				loadVerfahrenOptions();
+			}
+		};
+
+		modal.addEventListener('toggle', handleToggle);
+
+		return () => {
+			modal?.removeEventListener('toggle', handleToggle);
+		};
 	});
 </script>
 

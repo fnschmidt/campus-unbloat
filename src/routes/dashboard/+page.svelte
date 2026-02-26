@@ -78,7 +78,6 @@
 	});
 
 	async function fetchReminders() {
-		console.warn('fetchrem');
 		reminders = null;
 		presentReminderCategories = 0;
 
