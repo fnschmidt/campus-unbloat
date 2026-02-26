@@ -49,7 +49,7 @@
 </script>
 
 <DashboardModal bind:modal title="Mensa">
-	<div class="sticky -top-4 z-10 -mx-2 -mt-4 bg-base-100 p-2 pt-4">
+	<div class="sticky -top-4 z-10 -mt-4 bg-base-100 pt-4">
 		<MensaSelector on:selectChanged={handleSelectChange} />
 	</div>
 
