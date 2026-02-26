@@ -11,7 +11,7 @@
 
 <DashboardTile title="Mensa" on:click={() => modal?.showModal()} ready={Boolean(modal)}>
 	<div class="flex flex-col items-center gap-3">
-		<div class="stack h-20 w-28">
+		<div class="stack h-16 w-24">
 			<div class="grid place-content-center rounded-box bg-primary text-primary-content">
 				<FontAwesomeIcon size="xl" icon={faUtensils} />
 			</div>

@@ -42,11 +42,11 @@
 			eventInfoModal?.showModal();
 		},
 		eventContent: (info: {
-			event: { title?: unknown; extendedProps?: Record<string, unknown> };
+			event: { title?: unknown; extendedProps?: Record<string, unknown>; start: Date };
 			timeText: string;
 		}) => {
-			const sroom = info.event.extendedProps?.sroom;
-			return `${info.timeText}\n${info.event.title}${typeof sroom === 'string' ? `, Raum ${sroom}` : ''}`;
+			const timeStart = info.event.start.toLocaleTimeString('de', { timeStyle: 'short' });
+			return `${info.event.title}\n${timeStart}`;
 		}
 	});
 

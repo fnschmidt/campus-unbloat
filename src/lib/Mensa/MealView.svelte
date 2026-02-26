@@ -83,7 +83,7 @@
 	const container = document.createElement('div');
 	container.style.position = 'absolute';
 	container.style.visibility = 'hidden';
-	container.style.width = '266px';
+	container.style.width = '358px';
 	document.body.appendChild(container);
 
 	function getMealgroupHeights(mealGroups: MealGroup[]): number[] {
@@ -95,7 +95,7 @@
 				target: container
 			});
 
-			const height = container.clientHeight + 16 + 42; // +(2*8 padding) + (24 accordion title + 2*8padding) + 2px between items
+			const height = container.clientHeight + 8; // space-y-2 = 8px between
 			heights.push(height);
 			container.innerHTML = '';
 		}

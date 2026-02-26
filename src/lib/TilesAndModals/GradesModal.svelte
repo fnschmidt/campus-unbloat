@@ -228,6 +228,8 @@
 						gradeStats.four +
 						gradeStats.ronmodus} Ergebnisse
 				</h4>
+			{:else}
+				<div></div>
 			{/if}
 			<button class="btn btn-circle"><FontAwesomeIcon icon={faXmark} /></button>
 		</form>

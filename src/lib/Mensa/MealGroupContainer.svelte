@@ -29,7 +29,7 @@
 			vegan: [faLeaf, '#94c9a9', false],
 			vegetarisch: [faEgg, '#c6ecae', false],
 			fleisch: [faDrumstickBite, '#885053', true],
-			wok: [faKitchenSet, 'f4f07f', false],
+			wok: [faKitchenSet, '#f4f07f', false],
 			grill: [faBurger, '#fe5f55', true],
 			fisch: [faFish, '#777da7', true],
 			pastateller: [faBowlFood, defaultCol, false],

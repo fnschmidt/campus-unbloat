@@ -12,7 +12,7 @@
 </script>
 
 {#if !(gradeStats && maxValue)}
-	<div class="flex h-56 flex-col items-center justify-center gap-3">
+	<div class="flex h-48 flex-col items-center justify-center gap-3">
 		<span class="loading loading-xl loading-dots"></span>
 	</div>
 {:else}
