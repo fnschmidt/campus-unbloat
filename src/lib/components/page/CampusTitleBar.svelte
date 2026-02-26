@@ -46,24 +46,26 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown-center">
-			<div tabindex="0" role="button" class="btn my-1 rounded-full btn-soft btn-sm btn-primary">
-				Rechtliches
-			</div>
-			<div
-				tabindex="-1"
-				class="dropdown-content card z-1 w-44 rounded-3xl bg-primary/20 shadow-md backdrop-blur-2xl card-sm"
-			>
-				<div class="card-body p-3">
-					<a href={resolve('/impressum')} class="btn rounded-full btn-outline btn-primary"
-						>Impressum</a
-					>
-					<a href={resolve('/datenschutz')} class="btn rounded-full btn-outline btn-primary"
-						>Datenschutz</a
-					>
+		{#if page.route.id != '/'}
+			<div class="dropdown dropdown-center">
+				<div tabindex="0" role="button" class="btn my-1 rounded-full btn-soft btn-sm btn-primary">
+					Rechtliches
+				</div>
+				<div
+					tabindex="-1"
+					class="dropdown-content card z-1 w-44 rounded-3xl bg-primary/20 shadow-md backdrop-blur-2xl card-sm"
+				>
+					<div class="card-body p-3">
+						<a href={resolve('/impressum')} class="btn rounded-full btn-outline btn-primary"
+							>Impressum</a
+						>
+						<a href={resolve('/datenschutz')} class="btn rounded-full btn-outline btn-primary"
+							>Datenschutz</a
+						>
+					</div>
 				</div>
 			</div>
-		</div>
+		{/if}
 
 		{#if page.route.id == '/impressum' || page.route.id == '/datenschutz'}
 			<button

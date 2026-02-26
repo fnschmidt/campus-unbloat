@@ -43,8 +43,8 @@
 </script>
 
 <DashboardModal bind:modal title="Prüfungen">
-	<div class="flex justify-center">
-		<div role="tablist" class="tabs-box tabs">
+	<div class="sticky -top-4 z-10 -mt-4 flex justify-center bg-base-100 pt-4 pb-2">
+		<div role="tablist" class="tabs-border tabs-box tabs p-0">
 			<button
 				role="tab"
 				class="tab {signupOrVerfahren === SignupOrVerfahren.signup ? 'tab-active' : ''}"
