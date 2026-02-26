@@ -9,7 +9,7 @@
 
 <!-- Obere Navigationsleiste; Padding oben respektiert Safe-Area-Inset für nicht-eckige Bildschirme -->
 <nav
-	class="sticky top-0 z-50 flex h-14 items-center justify-between
+	class="sticky top-0 z-50 flex h-[calc(env(safe-area-inset-top,0px)+3.5rem)] items-center justify-between
 	border-b border-b-base-300 bg-base-100/90 px-4 pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-4 backdrop-blur-lg select-none"
 >
 	<!-- <div class="w-24 dark:brightness-90 dark:invert dark:saturate-0">
