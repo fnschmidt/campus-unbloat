@@ -122,7 +122,7 @@
 	{#if filteredGrades && filteredGrades.length > 0}
 		<div class="space-y-2">
 			{#each filteredGrades as grade, idx (grade)}
-				<div class="collapse-arrow collapse bg-base-200">
+				<div class="collapse-arrow collapse bg-base-100 shadow-md">
 					<input
 						type="checkbox"
 						checked={idx === accordionOpenIndex}
@@ -140,11 +140,11 @@
 									? 'badge-success'
 									: 'badge-accent'}">{grade.grade}</span
 						>
-						<span class="font-medium">{grade.name}</span>
+						<span class="text-sm font-bold">{grade.name}</span>
 					</div>
 
 					<div class="collapse-content space-y-4">
-						<div class="card bg-base-100 shadow">
+						<div class="card bg-base-200 shadow">
 							<div class="card-body gap-4 p-4">
 								<div class="flex items-center gap-3">
 									<span class="badge size-7 badge-primary">
@@ -168,7 +168,7 @@
 							</div>
 						</div>
 
-						<div class="card bg-base-100 shadow">
+						<div class="card bg-base-200 shadow">
 							<div class="card-body gap-3 p-4">
 								{#each grade.subgrades as subgrade (subgrade)}
 									<div class="flex items-center gap-3">
