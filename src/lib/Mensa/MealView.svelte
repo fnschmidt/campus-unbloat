@@ -9,14 +9,10 @@
 	let matches = false;
 	$: if (matches && mealGroups.length > 1) splitGroups(mealGroups);
 
-	// const dispatch = createEventDispatcher();
-
 	let column1: MealGroup[];
 	let column2: MealGroup[];
-	// $: splitGroups(mealGroups);
 
 	async function splitGroups(mealGroups: MealGroup[]) {
-		console.log('split');
 		let heights: number[] = getMealgroupHeights(mealGroups);
 		[column1, column2] = balanceElementsDP(mealGroups, heights);
 	}
