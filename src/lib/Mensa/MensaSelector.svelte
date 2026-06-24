@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher, onMount, tick } from 'svelte';
 
 	import type { Canteen, MensaSelectorEvent } from '../types';
 	import { getAltDayString, getNextWeekday, isSameDate } from '$lib/TSHelpers/DateHelper';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-	import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+	import { faArrowLeft, faArrowRight, faXmark } from '@fortawesome/free-solid-svg-icons';
 	import { SvelteDate } from 'svelte/reactivity';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import type { Writable } from 'svelte/store';
@@ -14,10 +14,38 @@
 	let selectedCanteen: Writable<number> | undefined = $state();
 	let selectedOpenMensaName: Writable<string> | undefined = $state();
 
+	let openMensaModal: HTMLDialogElement | null = $state(null);
+	let openMensaCanteens: Array<Canteen> | null = $state(null);
+	let openMensaFilteredCanteens: Array<Canteen> | null = $state(null);
+	let openMensaFilter: string = $state('');
+	let openMensaFilterElement: HTMLInputElement | null = $state(null);
+	let openMensaLoading = $state(false);
+
 	$effect(() => {
 		if (canteenSelectListValue) {
 			notifyParent();
 		}
+	});
+
+	$effect(() => {
+		if (!openMensaCanteens) {
+			openMensaFilteredCanteens = null;
+			return;
+		}
+
+		const filter = openMensaFilter.trim().toLowerCase();
+		if (!filter) {
+			openMensaFilteredCanteens = openMensaCanteens;
+			return;
+		}
+
+		const words = filter
+			.split(' ')
+			.map((w) => w.trim())
+			.filter(Boolean);
+		openMensaFilteredCanteens = openMensaCanteens.filter((canteen) =>
+			words.every((word) => canteen.name.toLowerCase().includes(word))
+		);
 	});
 
 	async function notifyParent() {
@@ -54,24 +82,9 @@
 	let selectedDate: SvelteDate = $state(getNextWeekday() as SvelteDate);
 
 	// key to reload canteens dropdown when an "openmensa" canteen is added to the list
-	let unique = {};
+	let unique = $state({});
 
 	const dispatch = createEventDispatcher();
-	// const modalStore = getModalStore();
-	// let openmensaModalComponent: ModalComponent;
-	// let openMensaModal: ModalSettings;
-
-	// openmensaModalComponent = {
-	// 	ref: OpenMensaModal,
-	// 	props: {
-	// 		onOpenMensaSelection: handleOpenMensaSelection
-	// 	}
-	// };
-
-	// openMensaModal = {
-	// 	type: 'component',
-	// 	component: openmensaModalComponent
-	// };
 
 	function changeCanteen(canteenId: number | undefined) {
 		if (canteenId === 0) {
@@ -83,32 +96,49 @@
 		}
 	}
 
-	function openOpenMensaModal() {
-		throw new Error('todo');
+	async function openOpenMensaModal() {
+		openMensaModal?.showModal();
+		await tick();
+		openMensaFilterElement?.focus();
+
+		if (openMensaCanteens || openMensaLoading) return;
+		openMensaLoading = true;
+		try {
+			const res = await fetch('/api/mensa/openmensacanteens');
+			if (!res.ok) {
+				window.alert('Error fetching OpenMensa canteens');
+				openMensaCanteens = [];
+				return;
+			}
+			openMensaCanteens = await res.json();
+		} finally {
+			openMensaLoading = false;
+		}
 	}
 
-	// function handleOpenMensaSelection(canteenId: number, canteenName: string) {
-	// 	const idxOldOpenMensa = canteens.findIndex((canteen) => canteen.id < 0);
-	// 	if (idxOldOpenMensa != -1) {
-	// 		canteens[idxOldOpenMensa] = {
-	// 			id: canteenId * -1,
-	// 			name: canteenName
-	// 		};
-	// 	} else {
-	// 		canteens.splice(canteens.length - 1, 0, {
-	// 			id: canteenId * -1,
-	// 			name: canteenName
-	// 		});
-	// 	}
+	function handleOpenMensaSelection(canteenId: number, canteenName: string) {
+		const id = canteenId * -1;
+		const entry = { id, name: canteenName };
 
-	// 	unique = {};
+		const idxOldOpenMensa = canteens.findIndex((canteen) => canteen.id < 0);
+		if (idxOldOpenMensa !== -1) {
+			canteens[idxOldOpenMensa] = entry;
+		} else {
+			// Insert right before the "Andere Mensa..." sentinel.
+			const idxOther = canteens.findIndex((canteen) => canteen.id === 0);
+			if (idxOther !== -1) canteens.splice(idxOther, 0, entry);
+			else canteens.push(entry);
+		}
 
-	// 	// omfg
-	// 	selectedCanteen.set(canteenId * -1);
-	// 	selectedOpenMensaName.set(canteenName);
-	// 	canteenSelectListValue = canteenId * -1;
-	// 	dispatch('selectChanged');
-	// }
+		unique = {};
+
+		selectedCanteen?.set(id);
+		selectedOpenMensaName?.set(canteenName);
+		canteenSelectListValue = id;
+
+		openMensaFilter = '';
+		openMensaModal?.close();
+	}
 
 	function handleDaySelection(forward: boolean) {
 		const day = selectedDate.getDay();
@@ -163,14 +193,52 @@
 	</div>
 </div>
 
+<dialog class="modal select-none" bind:this={openMensaModal}>
+	<div class="modal-box max-w-2xl">
+		<form method="dialog" class="flex items-center justify-between">
+			<h4 class="text-center text-lg font-semibold">OpenMensa</h4>
+			<button class="btn btn-circle" aria-label="Schließen">
+				<FontAwesomeIcon icon={faXmark} />
+			</button>
+		</form>
+
+		<div class="mt-3 space-y-3">
+			<input
+				bind:this={openMensaFilterElement}
+				bind:value={openMensaFilter}
+				type="text"
+				placeholder="Suchen..."
+				class="input-bordered input w-full"
+			/>
+
+			{#if openMensaLoading}
+				<div class="flex justify-center py-8">
+					<span class="loading loading-md loading-spinner"></span>
+				</div>
+			{:else if openMensaFilteredCanteens && openMensaFilteredCanteens.length > 0}
+				<div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+					{#each openMensaFilteredCanteens as canteen (canteen.id)}
+						<button
+							type="button"
+							class="flex items-center rounded-2xl bg-primary/20 px-4 py-2"
+							onclick={() => handleOpenMensaSelection(canteen.id, canteen.name)}
+						>
+							<p class="grow text-left">{canteen.name}</p>
+							<FontAwesomeIcon icon={faArrowRight} />
+						</button>
+					{/each}
+				</div>
+			{:else if openMensaFilteredCanteens}
+				<p class="py-4 text-center opacity-70">Keine Ergebnisse.</p>
+			{:else}
+				<p class="py-4 text-center opacity-70">Liste wird geladen...</p>
+			{/if}
+		</div>
+	</div>
+	<form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
+
 <div class="my-2 flex w-full justify-end space-x-1 pr-1">
-	<!-- <button
-		aria-label="Vorheriger Tag"
-		onclick={() => handleDaySelection(false)}
-		class="btn btn-circle size-10 shrink-0 btn-accent"
-	>
-		<FontAwesomeIcon icon={faArrowLeft} />
-	</button> -->
 	{#key unique}
 		<select
 			aria-label="Mensa auswählen"
@@ -185,11 +253,4 @@
 			{/each}
 		</select>
 	{/key}
-	<!-- <button
-		aria-label="Nächster Tag"
-		onclick={() => handleDaySelection(true)}
-		class="btn btn-circle size-10 shrink-0 btn-accent"
-	>
-		<FontAwesomeIcon icon={faArrowRight} />
-	</button> -->
 </div>
