@@ -115,44 +115,46 @@
 					</div>
 				</div>
 				<div class="collapse-content space-y-4">
-					<div class="card bg-base-100 shadow">
-						<div class="card-body gap-3 p-4">
-							{#if option.exam_date}
-								<div class="flex items-center gap-3">
-									<span class="badge size-7 badge-soft badge-primary">
-										<FontAwesomeIcon icon={faCalendar} />
-									</span>
-									<div>
-										<div class="font-bold">
-											{option.exam_date}{option.exam_time ? `, ${option.exam_time}` : ''}
+					{#if option.exam_date || option.exam_time || option.exam_room}
+						<div class="card bg-base-100 shadow">
+							<div class="card-body gap-3 p-4">
+								{#if option.exam_date}
+									<div class="flex items-center gap-3">
+										<span class="badge size-7 badge-soft badge-primary">
+											<FontAwesomeIcon icon={faCalendar} />
+										</span>
+										<div>
+											<div class="font-bold">
+												{option.exam_date}{option.exam_time ? `, ${option.exam_time}` : ''}
+											</div>
+											<div class="text-sm opacity-60">Prüfungsdatum</div>
 										</div>
-										<div class="text-sm opacity-60">Prüfungsdatum</div>
 									</div>
-								</div>
-							{/if}
+								{/if}
 
-							{#if option.exam_time}
-								<div class="flex items-center gap-3">
-									<span class="badge size-7 badge-soft badge-primary">
-										<FontAwesomeIcon icon={faClock} />
-									</span>
-									<div>
-										<div class="font-bold">{option.exam_time}</div>
-										<div class="text-sm opacity-60">Prüfungszeit</div>
+								{#if option.exam_time}
+									<div class="flex items-center gap-3">
+										<span class="badge size-7 badge-soft badge-primary">
+											<FontAwesomeIcon icon={faClock} />
+										</span>
+										<div>
+											<div class="font-bold">{option.exam_time}</div>
+											<div class="text-sm opacity-60">Prüfungszeit</div>
+										</div>
 									</div>
-								</div>
-							{/if}
+								{/if}
 
-							{#if option.exam_room}
-								<div class="flex items-center gap-3">
-									<span class="badge size-7 badge-soft badge-primary">
-										<FontAwesomeIcon icon={faLocationDot} />
-									</span>
-									<div class="font-bold">{option.exam_room}</div>
-								</div>
-							{/if}
+								{#if option.exam_room}
+									<div class="flex items-center gap-3">
+										<span class="badge size-7 badge-soft badge-primary">
+											<FontAwesomeIcon icon={faLocationDot} />
+										</span>
+										<div class="font-bold">{option.exam_room}</div>
+									</div>
+								{/if}
+							</div>
 						</div>
-					</div>
+					{/if}
 
 					<div class="card bg-base-100 shadow">
 						<div class="card-body gap-3 p-4">

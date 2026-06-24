@@ -26,7 +26,7 @@
 
 		<!-- Scrollbarer Bereich: Content geht unter den Header -->
 		<div
-			class="modalBody min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-gutter:stable_both-edges]"
+			class="modalBody min-h-0 flex-1 [scrollbar-gutter:stable_both-edges] overflow-y-auto overscroll-contain"
 		>
 			<!-- Spacer gleicht die überlappende Header-Höhe aus -->
 			<div class="h-[calc(env(safe-area-inset-top,0px)+4rem)] shrink-0"></div>

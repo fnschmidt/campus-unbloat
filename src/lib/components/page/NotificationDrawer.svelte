@@ -19,9 +19,9 @@
 		></label>
 		<label
 			for="notifications-drawer"
-			class="win-w-0 ml-12 flex h-full flex-col justify-center rounded-l-2xl bg-base-200/60 p-8 shadow-2xl backdrop-blur-2xl"
+			class="win-w-0 ml-12 flex h-full flex-col justify-center rounded-l-2xl p-8 shadow-2xl backdrop-blur-2xl"
 		>
-			<ul class=" ">
+			<ul class="overflow-y-auto">
 				<div class="space-y-4">
 					{#if reminders}
 						{#if reminders.latest.length > 0}

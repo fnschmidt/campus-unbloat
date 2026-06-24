@@ -5,6 +5,7 @@
 		faClock,
 		faDoorOpen,
 		faInfo,
+		faPlus,
 		faUser
 	} from '@fortawesome/free-solid-svg-icons';
 
@@ -79,18 +80,17 @@
 					<span class="font-semibold">Dozent:</span>
 					<span>{getExtendedProp(event, 'instructor') ?? '-'}</span>
 				</p>
-				{#if getExtendedProp(event, 'remarks')}
-					<p class="flex items-center gap-2">
-						<FontAwesomeIcon icon={faInfo} />
-						<span class="font-semibold">Info:</span>
-						<span>{getExtendedProp(event, 'remarks')}</span>
-					</p>
-				{/if}
 				{#if getExtendedProp(event, 'description')}
 					<p class="flex items-center gap-2">
 						<FontAwesomeIcon icon={faInfo} />
-						<span class="font-semibold">Beschreibung:</span>
 						<span>{getExtendedProp(event, 'description')}</span>
+					</p>
+				{/if}
+				{#if getExtendedProp(event, 'remarks')}
+					<p class="flex items-center gap-2">
+						<FontAwesomeIcon icon={faPlus} />
+						<span class="font-semibold">Info:</span>
+						<span>{getExtendedProp(event, 'remarks')}</span>
 					</p>
 				{/if}
 			</div>
