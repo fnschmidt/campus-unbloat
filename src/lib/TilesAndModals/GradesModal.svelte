@@ -111,7 +111,7 @@
 				</div>
 				<div class="badge h-10 p-2 badge-primary">
 					<FontAwesomeIcon icon={faGraduationCap} />
-					<span class="font-mono">
+					<span>
 						{totalCps ? weightedAverage.toPrecision(3) : '...'}
 					</span>
 				</div>
@@ -133,7 +133,7 @@
 
 					<div class="collapse-title flex items-center gap-3">
 						<span
-							class="badge flex-none p-2 font-mono badge-md font-bold {grade.total_passed ===
+							class="badge flex-none p-2 badge-md badge-soft font-bold {grade.total_passed ===
 							undefined
 								? 'badge-neutral'
 								: grade.total_passed
@@ -173,7 +173,7 @@
 								{#each grade.subgrades as subgrade (subgrade)}
 									<div class="flex items-center gap-3">
 										<span
-											class="badge flex-none p-2 font-mono badge-md font-bold {subgrade.passed ===
+											class="badge flex-none p-2 font-mono badge-md badge-soft font-bold {subgrade.passed ===
 											undefined
 												? 'badge-neutral'
 												: subgrade.passed
