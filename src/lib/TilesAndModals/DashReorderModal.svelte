@@ -4,6 +4,7 @@
 	import { flip } from 'svelte/animate';
 
 	import { tileNames, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder';
+	import { toastError } from '$lib/stores/toast';
 	import { faBars, faUpDownLeftRight, faXmark } from '@fortawesome/free-solid-svg-icons';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 
@@ -18,11 +19,12 @@
 	}
 
 	function finalize(e: CustomEvent) {
+		toastError('finalize');
 		handleSort(e);
 		let newSort = items.map((item) => item.id);
 
 		if (!validateComponentOrder(newSort)) {
-			window.alert('Reorder failed');
+			toastError('Reorder failed');
 		} else {
 			componentOrder.set(newSort);
 		}

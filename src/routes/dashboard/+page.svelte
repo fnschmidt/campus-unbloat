@@ -23,6 +23,7 @@
 	import { every as _every, some as _some, isEqual as _isEqual } from 'lodash-es';
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 	import NotificationDrawer from '$lib/components/page/NotificationDrawer.svelte';
+	import { toast } from '$lib/stores/toast';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faBell } from '@fortawesome/free-solid-svg-icons';
 
@@ -55,9 +56,7 @@
 			payload = data;
 		}
 
-		window.alert(`${payload.class}: ${payload.text}`);
-		// const toastSettings = getToastSettings(payload);
-		// toastStore.trigger(toastSettings);
+		toast(payload);
 	}
 
 	let readRemindersStore: Writable<CdReminders>;

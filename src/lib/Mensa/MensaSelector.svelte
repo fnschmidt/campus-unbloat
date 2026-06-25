@@ -8,6 +8,7 @@
 	import { SvelteDate } from 'svelte/reactivity';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import type { Writable } from 'svelte/store';
+	import { toastError } from '$lib/stores/toast';
 
 	let canteens: Array<Canteen> = $state([]);
 	let canteenSelectListValue: number | undefined = $state();
@@ -60,7 +61,7 @@
 		const res = await fetch('/api/mensa/canteens');
 
 		if (!res.ok) {
-			window.alert('Error fetching canteens');
+			toastError('Error fetching canteens');
 			return;
 		}
 
@@ -106,7 +107,7 @@
 		try {
 			const res = await fetch('/api/mensa/openmensacanteens');
 			if (!res.ok) {
-				window.alert('Error fetching OpenMensa canteens');
+				toastError('Error fetching OpenMensa canteens');
 				openMensaCanteens = [];
 				return;
 			}

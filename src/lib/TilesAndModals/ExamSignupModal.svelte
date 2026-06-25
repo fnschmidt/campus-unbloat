@@ -72,12 +72,11 @@
 		});
 
 		if (!response.ok) {
-			window.alert(await response.text());
-			// const toastSettings = getToastSettings({
-			// 	text: await response.text(),
-			// 	class: ToastPayloadClass.error
-			// });
-			// toastStore.trigger(toastSettings);
+			const payload: ToastPayload = {
+				text: await response.text(),
+				class: ToastPayloadClass.error
+			};
+			dispatch('showToast', payload);
 			return;
 		} else {
 			examDetails = await response.json();

@@ -2,6 +2,7 @@
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import CampusTitleBar from '$lib/components/page/CampusTitleBar.svelte';
+	import ToastHost from '$lib/components/page/ToastHost.svelte';
 	import { page } from '$app/state';
 	import { onMount, type Snippet } from 'svelte';
 	import iosPWASplash from 'ios-pwa-splash';
@@ -61,3 +62,5 @@
 		</main>
 	</div>
 {/if}
+
+<ToastHost />

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import type { CampusDualSignupOption } from '$lib/types';
+	import { toastError } from '$lib/stores/toast';
 	import { onMount } from 'svelte';
 	import ExamSignupModal from './ExamSignupModal.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
@@ -26,7 +27,7 @@
 
 		if (!res1.ok) {
 			let error = await res1.text();
-			window.alert(error);
+			toastError(error);
 		} else {
 			signupOptions = await res1.json();
 			signUppable = signupOptions!.filter((op) => op.status === '📝').length;

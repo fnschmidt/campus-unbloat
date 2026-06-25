@@ -3,6 +3,7 @@
 	import MealView from '$lib/Mensa/MealView.svelte';
 	import { fetchMeals, fetchOpenMeals } from '$lib/Mensa/MensaFuncs';
 	import MensaSelector from '$lib/Mensa/MensaSelector.svelte';
+	import { toastError } from '$lib/stores/toast';
 	import type { MealGroup, MensaSelectorEvent } from '$lib/types';
 	import type { SvelteDate } from 'svelte/reactivity';
 
@@ -27,7 +28,7 @@
 				return mealGroups;
 			}
 		} catch (e) {
-			window.alert(e);
+			toastError(e instanceof Error ? e.message : String(e));
 		}
 		// } catch (e) {
 		// 	if (e instanceof Error) {

@@ -6,6 +6,7 @@
 		type CampusGradeMetadata,
 		type CampusGradeStats
 	} from '$lib/types';
+	import { toastError } from '$lib/stores/toast';
 
 	import GradeStatsPopup from '$lib/Popups/GradeStatsPopup.svelte';
 	import DashboardModal from '$lib/DashboardModal.svelte';
@@ -69,7 +70,7 @@
 		});
 
 		if (!response.ok) {
-			window.alert('todo');
+			toastError(await response.text());
 			// const toastSettings = getToastSettings({
 			// 	text: await response.text(),
 			// 	class: ToastPayloadClass.error
