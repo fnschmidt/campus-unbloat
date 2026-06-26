@@ -3,7 +3,11 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-	import { faBug, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faBug,
+		faRightFromBracket,
+		faUpRightFromSquare
+	} from '@fortawesome/free-solid-svg-icons';
 	import { faGithub } from '@fortawesome/free-brands-svg-icons';
 </script>
 
@@ -23,7 +27,7 @@
 			</div>
 			<div
 				tabindex="-1"
-				class="dropdown-content card z-1 w-48 rounded-3xl bg-base-100 shadow-2xl card-sm"
+				class="dropdown-content card z-1 w-50 rounded-3xl bg-base-100 shadow-2xl card-sm"
 			>
 				<div class="card-body p-3">
 					<a
@@ -41,6 +45,12 @@
 						target="_blank"
 						class="btn rounded-2xl btn-soft btn-primary"
 						><FontAwesomeIcon icon={faBug} /> Fehler melden</a
+					>
+					<a
+						href="https://v1.unbloat.app"
+						target="_blank"
+						class="btn rounded-2xl btn-soft btn-primary"
+						><FontAwesomeIcon icon={faUpRightFromSquare} /> Zur alten Version</a
 					>
 				</div>
 			</div>
