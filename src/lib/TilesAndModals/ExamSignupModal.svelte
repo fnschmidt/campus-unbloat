@@ -1,15 +1,12 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
 	import {
 		SignupOrVerfahren,
-		ToastPayloadClass,
 		type CampusDualSignupOption,
 		type CampusDualVerfahrenOption,
 		type CampusExamDetails,
-		type CampusExamMetadata,
-		type ToastPayload
+		type CampusExamMetadata
 	} from '$lib/types';
+	import { toastError } from '$lib/stores/toast';
 	import DashboardModal from '$lib/DashboardModal.svelte';
 	import ExamSignupAccordion from '$lib/ExamSignup/ExamSignupAccordion.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
@@ -31,8 +28,6 @@
 		onExamSignupOrCancel?: () => void;
 	} = $props();
 
-	const dispatch = createEventDispatcher();
-
 	let examDetailsModal: HTMLDialogElement | null = null;
 	let examDetails: CampusExamDetails | null = $state(null);
 
@@ -44,12 +39,7 @@
 
 		const res = await fetch('/api/examverfahren');
 		if (!res.ok) {
-			const error = await res.text();
-			const payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-			dispatch('showToast', payload);
+			toastError(await res.text());
 			return;
 		}
 
@@ -72,11 +62,7 @@
 		});
 
 		if (!response.ok) {
-			const payload: ToastPayload = {
-				text: await response.text(),
-				class: ToastPayloadClass.error
-			};
-			dispatch('showToast', payload);
+			toastError(await response.text());
 			return;
 		} else {
 			examDetails = await response.json();

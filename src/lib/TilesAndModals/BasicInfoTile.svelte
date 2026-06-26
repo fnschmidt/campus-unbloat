@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { onMount, createEventDispatcher } from 'svelte';
+	import { onMount } from 'svelte';
 
 	import DashboardTile from '$lib/DashboardTile.svelte';
-	import { ToastPayloadClass, type BasicUserData, type ToastPayload } from '$lib/types';
+	import type { BasicUserData } from '$lib/types';
+	import { toastError } from '$lib/stores/toast';
 
 	export let basicUserData: BasicUserData;
-
-	const dispatch = createEventDispatcher();
 
 	let fachsemester: string;
 	let ects: string;
@@ -17,14 +16,7 @@
 		if (res1.ok) {
 			ects = await res1.json();
 		} else {
-			let error = await res1.text();
-
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-
-			dispatch('showToast', payload);
+			toastError(await res1.text());
 		}
 
 		const res2 = await fetch('/api/getfachsem');
@@ -32,14 +24,7 @@
 		if (res2.ok) {
 			fachsemester = await res2.text();
 		} else {
-			let error = await res2.text();
-
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-
-			dispatch('showToast', payload);
+			toastError(await res2.text());
 		}
 	});
 </script>

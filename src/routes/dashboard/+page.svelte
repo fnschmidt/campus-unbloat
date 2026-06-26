@@ -3,13 +3,7 @@
 	import type { Writable } from 'svelte/store';
 	import Portal from 'svelte-portal';
 
-	import {
-		// getToastSettings,
-		ToastPayloadClass,
-		type BasicUserData,
-		type CdReminders,
-		type ToastPayload
-	} from '$lib/types';
+	import { type BasicUserData, type CdReminders } from '$lib/types';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
 	import { components, validateComponentOrder } from '$lib/TSHelpers/ComponentOrder.js';
 
@@ -23,7 +17,7 @@
 	import { every as _every, some as _some, isEqual as _isEqual } from 'lodash-es';
 	import DashReorderModal from '$lib/TilesAndModals/DashReorderModal.svelte';
 	import NotificationDrawer from '$lib/components/page/NotificationDrawer.svelte';
-	import { toast } from '$lib/stores/toast';
+	import { toastError } from '$lib/stores/toast';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faBell } from '@fortawesome/free-solid-svg-icons';
 
@@ -46,18 +40,6 @@
 
 	let reminders: CdReminders | null;
 	let presentReminderCategories: number = 0;
-
-	function showToast(data: ToastPayload | CustomEvent) {
-		let payload: ToastPayload;
-
-		if (data instanceof CustomEvent) {
-			payload = data.detail;
-		} else {
-			payload = data;
-		}
-
-		toast(payload);
-	}
 
 	let readRemindersStore: Writable<CdReminders>;
 
@@ -83,13 +65,7 @@
 		const res = await fetch('/api/reminders');
 
 		if (!res.ok) {
-			let error = await res.text();
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-
-			showToast(payload);
+			toastError(await res.text());
 		} else {
 			reminders = await res.json();
 			presentReminderCategories = getUnreadReminderCategories(reminders!);
@@ -186,7 +162,6 @@
 					<svelte:component
 						this={componentMap[component]}
 						{...componentProps[component]}
-						on:showToast={showToast}
 						on:updateReminders={fetchReminders}
 					/>
 				</Portal>

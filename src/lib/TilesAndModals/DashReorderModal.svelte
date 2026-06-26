@@ -19,7 +19,6 @@
 	}
 
 	function finalize(e: CustomEvent) {
-		toastError('finalize');
 		handleSort(e);
 		let newSort = items.map((item) => item.id);
 

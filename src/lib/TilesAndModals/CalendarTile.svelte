@@ -8,6 +8,7 @@
 	import { getAltDayString } from '$lib/TSHelpers/DateHelper';
 	import { unixEventsToEvents } from '$lib/Calendar/CalendarFuncs';
 	import type { EventUnix } from '$lib/types';
+	import { toastError } from '$lib/stores/toast';
 	import { Calendar, List } from '@event-calendar/core';
 	import TileInteractiveElementWrapper from './TileInteractiveElementWrapper.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
@@ -130,17 +131,12 @@
 	async function fetchCalendar() {
 		isReloading = true;
 		const res = await fetch('/api/stundenplan');
-
-		// if (!res.ok) {
-		// 	let error = await res.text();
-		// 	let payload: ToastPayload = {
-		// 		text: error,
-		// 		class: ToastPayloadClass.error
-		// 	};
-
-		// 	// dispatch('showToast', payload);
-		// 	return;
-		// }
+		if (!res.ok) {
+			toastError(await res.text());
+			isReloading = false;
+			loading = false;
+			return;
+		}
 		loading = false;
 
 		let fetchedCalendar = await res.json();

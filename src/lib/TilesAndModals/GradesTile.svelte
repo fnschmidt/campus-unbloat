@@ -1,21 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { createEventDispatcher } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
-	import {
-		ToastPayloadClass,
-		type CampusDualGrade,
-		type ExamStats,
-		type ToastPayload
-	} from '$lib/types';
+	import type { CampusDualGrade, ExamStats } from '$lib/types';
 	import { persistentStore } from '$lib/TSHelpers/LocalStorageHelper';
+	import { toastError } from '$lib/stores/toast';
 	import DashboardTile from '$lib/DashboardTile.svelte';
 	import GradesModal from '$lib/TilesAndModals/GradesModal.svelte';
 	import PieChart from '$lib/Grades/PieChart.svelte';
 	import ChartLabel from '$lib/Grades/ChartLabel.svelte';
-
-	const dispatch = createEventDispatcher();
 
 	let modal: HTMLDialogElement | null = null;
 
@@ -28,12 +21,7 @@
 		const res1 = await fetch('/api/examstats');
 
 		if (!res1.ok) {
-			let error = await res1.text();
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-			dispatch('showToast', payload);
+			toastError(await res1.text());
 			return;
 		}
 		stats = await res1.json();
@@ -45,14 +33,7 @@
 			// always show "new grades" on first use
 			gradesCountStore = persistentStore('gradesCount', 0);
 		} else {
-			let error = await res2.text();
-
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-
-			dispatch('showToast', payload);
+			toastError(await res2.text());
 		}
 	});
 

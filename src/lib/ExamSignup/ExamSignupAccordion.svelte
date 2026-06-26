@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import {
 		faBan,
@@ -14,12 +13,11 @@
 
 	import {
 		SignupOrVerfahren,
-		ToastPayloadClass,
 		type CampusDualSignupOption,
 		type CampusDualVerfahrenOption,
-		type CampusExamMetadata,
-		type ToastPayload
+		type CampusExamMetadata
 	} from '$lib/types';
+	import { toastError, toastSuccess } from '$lib/stores/toast';
 
 	let {
 		data,
@@ -32,8 +30,6 @@
 		onExamSignupOrCancel?: () => void;
 		onGetExamInfo?: (internal_metadata: CampusExamMetadata) => void;
 	} = $props();
-
-	const dispatch = createEventDispatcher();
 
 	function getStatusMeta(status: string | undefined) {
 		switch (status) {
@@ -69,32 +65,20 @@
 			body: JSON.stringify(internal_metadata)
 		});
 
-		let payload: ToastPayload;
-
 		if (!response.ok) {
-			payload = {
-				text: await response.text(),
-				class: ToastPayloadClass.error
-			};
+			toastError(await response.text());
 		} else {
 			const respText = await response.text();
 			if (respText === '{}') {
-				payload = {
-					text:
-						signupOrVerfahren === SignupOrVerfahren.signup
-							? 'Erfolgreich angemeldet'
-							: 'Erfolgreich abgemeldet',
-					class: ToastPayloadClass.success
-				};
+				toastSuccess(
+					signupOrVerfahren === SignupOrVerfahren.signup
+						? 'Erfolgreich angemeldet'
+						: 'Erfolgreich abgemeldet'
+				);
 			} else {
-				payload = {
-					text: respText,
-					class: ToastPayloadClass.error
-				};
+				toastError(respText);
 			}
 		}
-
-		dispatch('showToast', payload);
 		onExamSignupOrCancel();
 	}
 </script>

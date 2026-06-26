@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { onMount, createEventDispatcher } from 'svelte';
+	import { onMount } from 'svelte';
 
-	import { ToastPayloadClass, type Timeline, type ToastPayload } from '$lib/types';
+	import type { Timeline } from '$lib/types';
+	import { toastError } from '$lib/stores/toast';
 	import DashboardTile from '$lib/DashboardTile.svelte';
-
-	const dispatch = createEventDispatcher();
 	const sections: { key: keyof Timeline; title: string }[] = [
 		{ key: 'fachsemester', title: 'Fachsemester' },
 		{ key: 'theoriesemester', title: 'Theoriesemester' },
@@ -18,12 +17,7 @@
 		const res = await fetch('/api/timeline');
 
 		if (!res.ok) {
-			let error = await res.text();
-			let payload: ToastPayload = {
-				text: error,
-				class: ToastPayloadClass.error
-			};
-			dispatch('showToast', payload);
+			toastError(await res.text());
 			return;
 		} else {
 			timeline = await res.json();

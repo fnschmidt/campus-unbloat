@@ -30,16 +30,6 @@
 		} catch (e) {
 			toastError(e instanceof Error ? e.message : String(e));
 		}
-		// } catch (e) {
-		// 	if (e instanceof Error) {
-		// 		let payload: ToastPayload = {
-		// 			text: e.message,
-		// 			class: ToastPayloadClass.error
-		// 		};
-
-		// 		dispatch('showToast', payload);
-		// 	}
-		// }
 	}
 
 	async function handleSelectChange(e: CustomEvent<MensaSelectorEvent>) {
