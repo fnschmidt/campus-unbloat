@@ -20,7 +20,7 @@ export async function load({ cookies }) {
 					httpOnly: true,
 					secure: process.env.NODE_ENV === 'production'
 				});
-				throw redirect(303, '/login');
+				throw redirect(303, '/');
 			case 429:
 				return error(429, 'Zu viele Anfragen');
 			default:

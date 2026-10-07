@@ -34,6 +34,9 @@ export const actions: Actions = {
 					case 401:
 						message = 'Nutzer/Passwort ungültig';
 						break;
+					case 502:
+						message = 'CampusDual V2 wird aktuell nicht unterstützt. Bitte beachte die GitHub Issues.';
+						break;
 					case 500:
 						message = `Interner Fehler (500): ${await response.text()}`;
 						break;
